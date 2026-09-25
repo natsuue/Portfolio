@@ -1,0 +1,380 @@
+/* "Inside PuriSense" — scroll-driven exploded model */
+
+.inside {
+  padding-bottom: 0;
+}
+
+.inside .section-head {
+  margin-bottom: 0;
+}
+
+.inside__track {
+  --p: 0;
+  position: relative;
+  height: 320vh;
+}
+
+.inside__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  padding-top: calc(var(--header-h) + 1rem);
+  padding-bottom: 1.5rem;
+}
+
+.inside__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  height: 100%;
+  align-items: center;
+}
+
+.inside__stage {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+}
+
+.inside__backdrop {
+  position: absolute;
+  inset: 4% 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(55% 55% at 50% 45%, rgba(212, 255, 63, 0.07), transparent 70%),
+    var(--bg-2);
+  overflow: hidden;
+}
+
+.inside__backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 20%, transparent 75%);
+}
+
+.model-stage,
+.inside__poster {
+  position: absolute;
+  inset: 4% 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.model-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.inside__poster {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.35;
+  filter: blur(2px);
+}
+
+.inside__poster.is-fallback {
+  opacity: 1;
+  filter: none;
+}
+
+.inside__loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  color: var(--dim);
+  animation: fade-up 0.6s var(--ease-out) both;
+}
+
+/* Labels pinned to parts */
+.model-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.model-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  will-change: transform;
+}
+
+.model-label__dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(212, 255, 63, 0.18);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.model-label__text {
+  position: absolute;
+  top: -0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(10, 11, 13, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.35s, translate 0.45s var(--ease-out);
+}
+
+.model-label__text .mono {
+  color: var(--accent);
+  font-size: 0.62rem;
+}
+
+/* Leader line from dot to chip */
+.model-label__text::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.model-label[data-side='right'] .model-label__text {
+  left: 1.75rem;
+  translate: -6px 0;
+}
+
+.model-label[data-side='right'] .model-label__text::before {
+  right: 100%;
+}
+
+.model-label[data-side='left'] .model-label__text {
+  right: 1.75rem;
+  translate: 6px 0;
+}
+
+.model-label[data-side='left'] .model-label__text::before {
+  left: 100%;
+}
+
+.model-label.is-shown .model-label__dot,
+.model-label.is-shown .model-label__text {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Progress rail */
+.inside__rail {
+  position: absolute;
+  top: 12%;
+  bottom: 12%;
+  left: 1.25rem;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.inside__rail-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(212, 255, 63, 0.5);
+  transform-origin: top;
+  transform: scaleY(var(--p));
+}
+
+.inside__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 7%;
+  translate: -50% 0;
+  color: var(--dim);
+  opacity: calc(1 - var(--p) * 12);
+}
+
+/* Parts list */
+.inside__count {
+  margin-bottom: 1.25rem;
+  color: var(--dim);
+}
+
+.inside__count span {
+  color: var(--accent);
+}
+
+.inside__parts ol {
+  display: grid;
+  gap: 0.15rem;
+  border-left: 1px solid var(--line);
+}
+
+.inside__parts li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.5rem;
+  padding: 0.6rem 0 0.6rem 1rem;
+  margin-left: -1px;
+  border-left: 1px solid transparent;
+  opacity: 0.45;
+  transition: opacity 0.4s, border-color 0.4s;
+}
+
+.inside__parts li.is-active {
+  opacity: 1;
+  border-left-color: var(--accent);
+}
+
+.inside__num {
+  padding-top: 0.2rem;
+  color: var(--dim);
+}
+
+.inside__parts li.is-active .inside__num {
+  color: var(--accent);
+}
+
+.inside__parts h3 {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.inside__parts li p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.45s var(--ease-out), margin 0.45s var(--ease-out);
+}
+
+.inside__parts li.is-active p {
+  max-height: 8rem;
+  margin-top: 0.3rem;
+}
+
+.inside__slider {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+  color: var(--dim);
+}
+
+.inside__slider input {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+/* Reduced motion: normal flow, slider instead of scroll */
+.inside--static .inside__track {
+  height: auto;
+}
+
+.inside--static .inside__sticky {
+  position: static;
+  height: auto;
+  padding-top: clamp(2rem, 5vw, 3.5rem);
+  padding-bottom: var(--section-pad);
+}
+
+.inside--static .inside__stage {
+  height: min(75vh, 640px);
+}
+
+.inside--static .inside__parts li p {
+  max-height: none;
+  margin-top: 0.3rem;
+}
+
+.inside--static .inside__parts li {
+  opacity: 1;
+}
+
+/* Tablet & mobile: stage on top, only the active part's card below */
+@media (max-width: 899px) {
+  .inside__track {
+    height: 260vh;
+  }
+
+  .inside__layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .inside:not(.inside--static) .inside__parts ol {
+    border-left: 0;
+  }
+
+  .inside:not(.inside--static) .inside__parts li:not(.is-active) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .inside:not(.inside--static) .inside__parts li.is-active {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-left: 2px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .inside__parts li p {
+    min-height: 2.8em;
+  }
+
+  .inside__count {
+    margin-bottom: 0.6rem;
+  }
+
+  .inside--static .inside__layout {
+    grid-template-rows: auto auto;
+  }
+}
+
+@media (max-width: 599px) {
+  .model-labels {
+    display: none;
+  }
+
+  .inside__rail {
+    left: 0.75rem;
+  }
+}
+
+/* Short laptop screens: keep the full parts list inside the pinned stage */
+@media (min-width: 900px) and (max-height: 820px) {
+  .inside__parts li {
+    padding-block: 0.4rem;
+  }
+
+  .inside__parts h3 {
+    font-size: 0.98rem;
+  }
+
+  .inside__count {
+    margin-bottom: 0.75rem;
+  }
+}

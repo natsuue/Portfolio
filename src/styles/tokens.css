@@ -1,0 +1,42 @@
+/* Design tokens — change the palette, type, and spacing here. */
+:root {
+  /* Surfaces */
+  --bg: #0a0b0d;
+  --bg-2: #0f1114;
+  --surface: #13161a;
+  --surface-2: #1a1e23;
+  --line: rgba(236, 235, 230, 0.09);
+  --line-strong: rgba(236, 235, 230, 0.18);
+
+  /* Text */
+  --text: #ecebe6;
+  --muted: #a6a8ae;
+  --dim: #85888f;
+
+  /* Accents */
+  --accent: #d4ff3f;
+  --accent-ink: #0a0b0d;
+  --accent-soft: rgba(212, 255, 63, 0.1);
+  --accent-2: #5fe3cf;
+  --danger: #ff9a8f;
+
+  /* Type */
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* Layout */
+  --maxw: 1320px;
+  --gutter: clamp(1.1rem, 4vw, 3rem);
+  --section-pad: clamp(5rem, 11vw, 9.5rem);
+  --header-h: 68px;
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  color-scheme: dark;
+}
