@@ -61,7 +61,6 @@ export default function LoadingScreen() {
     let raf = 0;
     let released = false;
     const start = performance.now();
-    let last = start;
     let t = 0;
 
     const dissolve = (k) => {
@@ -96,17 +95,18 @@ export default function LoadingScreen() {
     const holdAt = finalAt - 0.1;
     const { start: dStart, duration: dDur } = config.dissolve;
 
+    // The sequence follows real elapsed time, so it finishes on schedule even on a slow device
+    // (dropped frames skip ahead rather than stretching the intro). Only waiting for fonts adds time.
+    let held = 0;
     const tick = (now) => {
-      const dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
       const elapsed = (now - start) / 1000;
+      t = elapsed - held;
       // Wait (breathing gently) before the final pulse if fonts aren't ready — up to maxWait.
-      const waiting = !fontsReady && t + dt >= holdAt && elapsed < config.maxWait;
-      if (waiting) {
+      if (!fontsReady && t >= holdAt && elapsed < config.maxWait) {
+        held = elapsed - holdAt;
         t = holdAt;
         system.render(t, { breathe: (Math.sin(now / 420) + 1) / 2 });
       } else {
-        t += dt;
         system.render(t);
       }
 
