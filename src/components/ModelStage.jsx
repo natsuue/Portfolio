@@ -18,10 +18,10 @@ const CAMERA = {
   targetY: [0, 0.1],
 };
 
-function makeMaterials(accent, teal) {
+function makeMaterials(accent, accent2) {
   return {
     component: new THREE.MeshStandardMaterial({ color: 0x8a929c, metalness: 0.45, roughness: 0.45 }),
-    teal: new THREE.MeshStandardMaterial({ color: teal, metalness: 0.2, roughness: 0.5 }),
+    accent2: new THREE.MeshStandardMaterial({ color: accent2, metalness: 0.2, roughness: 0.5 }),
     body: new THREE.MeshStandardMaterial({ color: 0x2c3138, metalness: 0.75, roughness: 0.38 }),
     panel: new THREE.MeshStandardMaterial({ color: 0x454c56, metalness: 0.7, roughness: 0.32 }),
     matte: new THREE.MeshStandardMaterial({ color: 0x1b1e23, metalness: 0, roughness: 0.9 }),
@@ -71,7 +71,7 @@ const ModelStage = forwardRef(function ModelStage({ model, onReady, onError }, r
     const host = hostRef.current;
     const canvas = canvasRef.current;
     const small = window.matchMedia('(max-width: 599px)').matches;
-    const accentHex = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d4ff3f';
+    const accentHex = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#47afff';
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, small ? 1.25 : 1.75));
@@ -90,8 +90,8 @@ const ModelStage = forwardRef(function ModelStage({ model, onReady, onError }, r
     scene.add(key, rim, makeShadow());
 
     const css = getComputedStyle(document.documentElement);
-    const tealHex = css.getPropertyValue('--accent-2').trim() || '#5fe3cf';
-    const materials = makeMaterials(new THREE.Color(accentHex), new THREE.Color(tealHex));
+    const accent2Hex = css.getPropertyValue('--accent-2').trim() || '#ffb547';
+    const materials = makeMaterials(new THREE.Color(accentHex), new THREE.Color(accent2Hex));
     const count = stepCount(model.parts);
     let parts = [];
     const cadMaterials = new Map();

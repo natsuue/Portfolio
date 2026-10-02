@@ -69,7 +69,7 @@ export default function HeroCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d4ff3f';
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#47afff';
     const base = document.createElement('canvas');
     let w = 0, h = 0, dpr = 1, traces = [], raf = 0, last = 0, visible = true;
 

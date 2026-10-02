@@ -14,10 +14,15 @@
   --dim: #85888f;
 
   /* Accents */
-  --accent: #d4ff3f;
+  /* Accent: electric blue (matches the intro burst, hue 206). Change the RGB triplets to retheme. */
+  --accent-rgb: 71, 175, 255;
+  --accent: rgb(var(--accent-rgb));
+  --accent-hover: #85c9ff;
   --accent-ink: #0a0b0d;
-  --accent-soft: rgba(212, 255, 63, 0.1);
-  --accent-2: #5fe3cf;
+  --accent-soft: rgba(var(--accent-rgb), 0.1);
+  /* Second accent: amber, for contrast (project labels, the 3D sensor, the Hero's glow). */
+  --accent-2-rgb: 255, 181, 71;
+  --accent-2: rgb(var(--accent-2-rgb));
   --danger: #ff9a8f;
 
   /* Type */

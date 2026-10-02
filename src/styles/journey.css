@@ -21,7 +21,7 @@
 
 .timeline__progress {
   background: var(--accent);
-  box-shadow: 0 0 12px rgba(212, 255, 63, 0.5);
+  box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.5);
   transform: scaleY(var(--progress));
   transform-origin: top;
 }
@@ -131,7 +131,7 @@
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-lg);
   background:
-    radial-gradient(60% 120% at 100% 0%, rgba(212, 255, 63, 0.08), transparent 60%),
+    radial-gradient(60% 120% at 100% 0%, rgba(var(--accent-rgb), 0.08), transparent 60%),
     var(--surface);
 }
 

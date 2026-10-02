@@ -4,7 +4,7 @@
 // Each part names one or more meshes from the model (as printed by the convert script), the
 // direction it moves when exploded (`offset`, in model units — the model is 2 units tall), and
 // `step`, the order it separates in (parts can share a step). `step: -1` stays in place.
-// `tone` picks the material: body / panel / matte / component / accent / teal, or `original`
+// `tone` picks the material: body / panel / matte / component / accent / accent2, or `original`
 // to keep the colours from the CAD file. Meshes not listed here stay in place.
 //
 // NOTE: the part notes are drafts written from the thesis docs — review and correct them.
@@ -70,7 +70,7 @@ export const purisenseModel = {
       note: 'Laser dust sensor with its built-in fan, read over UART once a second. PuriSense pairs two — intake and exhaust.',
       offset: [0.6, -0.55, -0.35],
       step: 5,
-      tone: 'teal',
+      tone: 'accent2',
     },
     {
       meshes: ['base_cover'],

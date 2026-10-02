@@ -71,7 +71,7 @@
 .project-card__shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, transparent 35%, rgba(212, 255, 63, 0.16) 100%);
+  background: linear-gradient(160deg, transparent 35%, rgba(var(--accent-rgb), 0.16) 100%);
   opacity: 0;
   transition: opacity 0.6s var(--ease-out);
 }

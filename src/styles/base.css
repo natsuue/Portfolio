@@ -209,7 +209,7 @@ main:focus {
 }
 
 .btn--primary:hover {
-  background: #e4ff7a;
+  background: var(--accent-hover);
 }
 
 .btn--ghost {
