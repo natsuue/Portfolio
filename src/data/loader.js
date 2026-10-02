@@ -1,40 +1,66 @@
-// The "power-up" intro that plays before the Hero.
-// Times are in seconds from the start of the sequence; `reach` is how far a pulse travels, as a
-// fraction of the whole circuit's radius. The circuit layout is generated from `seed`, so it
-// looks the same on every visit (for a given screen size).
+// The "power-up" intro that plays before the Hero: a circuit burst leaving the NS chip.
+// These values were tuned in the prototype's Tweak panel ("Copy settings"). Times are in seconds
+// from the start of the intro.
 
 export const loaderConfig = {
   enabled: true,
-  maxWait: 5, // longest the intro waits for fonts before handing over anyway
-  seed: 20260926,
+  maxWait: 5, // longest the intro waits (at rest, before ignition) for fonts to load
+  seed: 505, // the circuit layout; any number gives a different, stable layout
 
-  // Circuit density per screen size.
-  density: {
-    desktop: { grid: 24, roots: 24, maxDepth: 11, branchChance: 0.4, maxEdges: 360, componentChance: 0.16 },
-    tablet: { grid: 24, roots: 18, maxDepth: 9, branchChance: 0.34, maxEdges: 240, componentChance: 0.14 },
-    mobile: { grid: 22, roots: 12, maxDepth: 8, branchChance: 0.3, maxEdges: 150, componentChance: 0.12 },
+  timing: {
+    ignite: 1, // NS + chip light up and the traces start growing
+    growDur: 3, // traces travel from the chip out past the screen edges
+    dimStart: 0.5,
+    dimAmount: 0, // 0 = traces stay at full brightness
+    nsFadeStart: 1.5, // NS + chip outline fade out together…
+    nsFadeDur: 0.5,
+    linkErase: true, // …and the erase starts the moment the chip is gone (eraseStart ignored)
+    eraseStart: 1.65,
+    eraseDur: 3, // the erase runs from the centre outward, like the growth in reverse
+    heroIn: 2, // the Hero starts appearing underneath
+    handoverDur: 1,
   },
 
-  // Each pulse leaves NS at `at` and reaches further than the last; the final one runs past
-  // the edges of the board.
-  pulses: [
-    { at: 0.35, reach: 0.32 },
-    { at: 1.0, reach: 0.56 },
-    { at: 1.7, reach: 0.8 },
-    { at: 2.4, reach: 1, final: true },
-  ],
-  pulseSpeed: 1.15, // circuit radii per second
-  tail: 70, // length of a pulse's glowing head, in px
-  persist: [0.14, 0.2, 0.27, 0.42], // how lit the traces stay after each pulse
-  nsRest: 0.04, // NS glow between pulses (0–1)
+  // Desktop values; smaller screens override some of them below.
+  traces: {
+    pins: 26, // traces per side of the chip
+    stubRatio: 0.1,
+    jogChance: 0.8,
+    traceLength: 1.6,
+    dottedRatio: 0,
+    backLayers: 2, // fainter layers behind, for depth (0–2)
+    backBright: 0.6,
+    dataLines: 60,
+    glints: 0.5,
+  },
+  density: {
+    tablet: { pins: 20, dataLines: 40, glints: 0.4 },
+    mobile: { pins: 13, backLayers: 1, dataLines: 30, glints: 0.3 },
+  },
 
-  // Soft glow as the final wave clears the board, then the dissolve into the Hero.
-  glow: 0.2,
-  dissolve: { start: 3.05, duration: 0.5 },
+  look: {
+    lineWidth: 1,
+    brightness: 0.8,
+    glow: 1,
+    glowBlur: 10, // px
+    hue: 206, // electric blue — used only in the intro
+    coreDark: 0,
+  },
+  lookMobile: { glowBlur: 6 },
 
-  // Reduced motion: a static lit circuit, then a quick fade.
-  reduced: { hold: 0.5, fade: 0.4 },
+  ns: { settle: 0.95, chipBright: 0.95 },
+  eraseSpark: true, // a bright spark leads the erase, like the growth tips
+
+  // Reduced motion: a still, fully drawn frame, then a plain fade.
+  reduced: { hold: 0.6, fade: 0.4 },
 
   // Reserved for a later optional status line (e.g. ['INITIALIZING SYSTEM', …]).
   statusText: null,
 };
+
+export function densityFor(width) {
+  const c = loaderConfig;
+  if (width < 600) return { traces: { ...c.traces, ...c.density.mobile }, look: { ...c.look, ...c.lookMobile } };
+  if (width < 1000) return { traces: { ...c.traces, ...c.density.tablet }, look: c.look };
+  return { traces: c.traces, look: c.look };
+}

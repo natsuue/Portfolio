@@ -1,44 +1,51 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import NSLogo from '../NSLogo.jsx';
-import CircuitNetwork from './CircuitNetwork.jsx';
-import { createPulseSystem } from './pulseSystem.js';
-import { densityFor, generateCircuit } from './generateCircuit.js';
-import { loaderConfig as config } from '../../data/loader.js';
+import { generateBurst } from './generateBurst.js';
+import { createBurstRenderer, makeTimeline, paletteFor } from './burstSystem.js';
+import { densityFor, loaderConfig as config } from '../../data/loader.js';
 import useReducedMotion from '../../hooks/useReducedMotion.js';
 
 // "Power-up" intro. index.html adds `is-booting` to <html> (skipped for direct links such as
-// /#contact) and paints a static NS so the very first frame is already the logo. This
-// component takes over, plays the sequence, then removes `is-booting` — which is what lets
-// the Hero's own entrance animations and the nav start.
+// /#contact) and paints a static dim NS so the very first frame is already the logo. This
+// component takes over and plays the circuit burst. Removing `is-booting` at the Hero handover
+// is what lets the Hero's own entrance animations and the nav start.
 
 const root = () => document.documentElement;
-const logoSizeFor = (w) => Math.min(150, Math.max(88, w * 0.12)); // matches --ns-size in CSS
+const nsSizeFor = (w) => Math.min(150, Math.max(88, w * 0.12)); // matches --ns-size in CSS
+const smooth = (x) => {
+  const t = Math.min(1, Math.max(0, x));
+  return t * t * (3 - 2 * t);
+};
+const PINS = Array.from({ length: 8 }, (_, i) => 2 + (60 * (i + 0.5)) / 8);
+const rgb = (c) => `rgb(${c.join(',')})`;
 
 function release() {
   root().classList.remove('is-booting');
   document.getElementById('boot')?.remove();
 }
 
-const easeOut = (t) => 1 - (1 - t) ** 3;
-
 export default function LoadingScreen() {
   const reduced = useReducedMotion();
   const [playing] = useState(() => config.enabled && root().classList.contains('is-booting'));
   const [done, setDone] = useState(!playing);
   const screenRef = useRef(null);
-  const els = useRef({ lit: [], halo: [], pulse: [], nodes: [], components: [], ring: null, root: null }).current;
+  const canvasRef = useRef(null);
+  const markRef = useRef(null);
+  const litRef = useRef(null);
+  const haloRef = useRef(null);
+  const chipRef = useRef(null);
 
-  const circuit = useMemo(() => {
+  const setup = useMemo(() => {
     if (!playing) return null;
     const width = window.innerWidth;
     const height = window.innerHeight;
-    return generateCircuit({
-      width,
-      height,
-      logoSize: logoSizeFor(width),
-      seed: config.seed,
-      ...densityFor(width, config.density),
-    });
+    const { traces, look } = densityFor(width);
+    return {
+      burst: generateBurst({ width, height, nsSize: nsSizeFor(width), seed: config.seed, traces }),
+      look,
+      timeline: makeTimeline(config.timing),
+      palette: paletteFor(look.hue),
+    };
   }, [playing]);
 
   // Not playing (disabled, or a direct link): hand straight over.
@@ -47,35 +54,45 @@ export default function LoadingScreen() {
   }, [playing]);
 
   useEffect(() => {
-    if (!playing || !circuit) return;
-    els.root = screenRef.current;
+    if (!playing || !setup) return;
     window.scrollTo(0, 0);
     // The React version is now on screen; the static first frame can go.
     requestAnimationFrame(() => document.getElementById('boot')?.remove());
 
-    const system = createPulseSystem({ circuit, config, els });
+    const { burst, look, timeline } = setup;
+    const { T } = timeline;
+    const renderer = createBurstRenderer({ canvas: canvasRef.current, burst, look, eraseSpark: config.eraseSpark, timeline });
+    const fit = () => renderer.resize(window.innerWidth, window.innerHeight, Math.min(window.devicePixelRatio || 1, window.innerWidth < 600 ? 1.5 : 2));
+    fit();
+    window.addEventListener('resize', fit);
+
     const screen = screenRef.current;
+    const levels = (t, still = false) => {
+      const lit = still ? 1 : timeline.nsLit(t, config.ns.settle);
+      litRef.current.style.opacity = lit.toFixed(3);
+      haloRef.current.style.opacity = (lit * 0.9).toFixed(3);
+      markRef.current.style.opacity = (still ? 1 : timeline.nsMark(t)).toFixed(3);
+      chipRef.current.style.opacity = ((still ? 1 : timeline.chip(t)) * config.ns.chipBright).toFixed(3);
+    };
+
     let fontsReady = !document.fonts;
     document.fonts?.ready.then(() => (fontsReady = true));
-
     let raf = 0;
     let released = false;
     const start = performance.now();
-    let t = 0;
-
-    const dissolve = (k) => {
-      const e = easeOut(Math.min(1, Math.max(0, k)));
-      screen.style.setProperty('--fade', (1 - e).toFixed(3));
-      screen.style.setProperty('--dissolve', e.toFixed(3));
-    };
     const finish = () => {
       if (!released) release();
       setDone(true);
     };
+    const cleanup = () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', fit);
+    };
 
     if (reduced) {
-      // Static lit board, a short hold, then a plain fade.
-      system.renderStatic(config.persist.at(-1));
+      // A still, fully drawn frame, a short hold, then a plain fade.
+      renderer.render(0, { staticFrame: true });
+      levels(0, true);
       const { hold, fade } = config.reduced;
       const tick = (now) => {
         const s = (now - start) / 1000;
@@ -83,59 +100,69 @@ export default function LoadingScreen() {
           released = true;
           release();
         }
-        dissolve((s - hold) / fade);
+        screen.style.opacity = (1 - smooth((s - hold) / fade)).toFixed(3);
         if (s >= hold + fade) return finish();
         raf = requestAnimationFrame(tick);
       };
       raf = requestAnimationFrame(tick);
-      return () => cancelAnimationFrame(raf);
+      return cleanup;
     }
 
-    const finalAt = config.pulses.find((p) => p.final)?.at ?? config.pulses.at(-1).at;
-    const holdAt = finalAt - 0.1;
-    const { start: dStart, duration: dDur } = config.dissolve;
-
-    // The sequence follows real elapsed time, so it finishes on schedule even on a slow device
-    // (dropped frames skip ahead rather than stretching the intro). Only waiting for fonts adds time.
+    // Real elapsed time drives the sequence, so it stays on schedule on slow devices. The only
+    // thing that can extend it: if fonts aren't ready, NS waits at rest just before ignition.
+    const finishAt = timeline.finishAt(burst.reach, burst.visibleExtent);
+    const holdAt = T.ignite - 0.05;
     let held = 0;
     const tick = (now) => {
       const elapsed = (now - start) / 1000;
-      t = elapsed - held;
-      // Wait (breathing gently) before the final pulse if fonts aren't ready — up to maxWait.
+      let t = elapsed - held;
       if (!fontsReady && t >= holdAt && elapsed < config.maxWait) {
         held = elapsed - holdAt;
         t = holdAt;
-        system.render(t, { breathe: (Math.sin(now / 420) + 1) / 2 });
-      } else {
-        system.render(t);
       }
-
-      if (t >= dStart) {
-        if (!released) {
-          released = true;
-          release();
-        }
-        const k = (t - dStart) / dDur;
-        dissolve(k);
-        if (k >= 1) return finish();
+      renderer.render(t);
+      levels(t);
+      screen.style.setProperty('--fade', (1 - timeline.reveal(t)).toFixed(3));
+      if (t >= T.heroIn && !released) {
+        released = true;
+        release();
       }
+      if (t >= finishAt) return finish();
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [playing, circuit, reduced, els]);
+    return cleanup;
+  }, [playing, setup, reduced]);
 
-  if (done || !circuit) return null;
+  if (done || !setup) return null;
 
   return (
-    <div className="loader" ref={screenRef} aria-hidden="true">
+    <div
+      className="loader"
+      ref={screenRef}
+      aria-hidden="true"
+      style={{ '--burst-core': rgb(setup.palette.core), '--burst-mid': rgb(setup.palette.mid) }}
+    >
       <div className="loader__bg" />
-      <CircuitNetwork circuit={circuit} tail={config.tail} els={els} />
-      <div className="loader__glow" />
-      <div className="loader__ns">
-        <NSLogo className="ns-base" />
-        <NSLogo className="ns-halo" />
-        <NSLogo className="ns-lit" />
+      <canvas className="loader__burst" ref={canvasRef} />
+      <svg className="loader__chip" ref={chipRef} viewBox="-10 -10 84 84" fill="none" strokeLinecap="round">
+        <rect x="2" y="2" width="60" height="60" rx="7" strokeWidth="1.5" />
+        <g strokeWidth="1.5">
+          {PINS.map((v) => (
+            <path key={v} d={`M${v} 2 V-6 M${v} 62 V70 M2 ${v} H-6 M62 ${v} H70`} />
+          ))}
+        </g>
+      </svg>
+      <div className="loader__ns" ref={markRef}>
+        <span className="ns-layer ns-base">
+          <NSLogo />
+        </span>
+        <span className="ns-layer ns-halo" ref={haloRef}>
+          <NSLogo />
+        </span>
+        <span className="ns-layer ns-lit" ref={litRef}>
+          <NSLogo />
+        </span>
       </div>
     </div>
   );
