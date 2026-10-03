@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import useReducedMotion from '../hooks/useReducedMotion.js';
+import { HERO_SETTINGS_EVENT, heroSettings } from '../data/hero.js';
 
 // Procedural PCB-style traces with signal pulses travelling along them.
 // Static traces are drawn once to an offscreen canvas; each frame only adds the pulses.
@@ -128,7 +129,7 @@ export default function HeroCanvas() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = base.width = Math.round(w * dpr);
       canvas.height = base.height = Math.round(h * dpr);
-      traces = makeTraces(w, h);
+      traces = makeTraces(w, h, heroSettings.lines.area, heroSettings.lines.max);
       drawBase();
       if (reduced) {
         // A still frame with a few traces lit.
@@ -162,6 +163,7 @@ export default function HeroCanvas() {
       resizeTimer = setTimeout(build, 150);
     });
     ro.observe(canvas);
+    window.addEventListener(HERO_SETTINGS_EVENT, build);
 
     const io = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
@@ -178,6 +180,7 @@ export default function HeroCanvas() {
       ro.disconnect();
       io.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener(HERO_SETTINGS_EVENT, build);
     };
   }, [reduced]);
 

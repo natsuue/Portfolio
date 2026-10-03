@@ -8,6 +8,11 @@ import Timeline from './components/Timeline.jsx';
 import Achievements from './components/Achievements.jsx';
 import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
+import { lazy, Suspense } from 'react';
+
+// Temporary tuning panel for the Hero's background and flashlight: in `npm run dev`, or with ?tweak.
+const HeroTweaks = lazy(() => import('./components/HeroTweaks.jsx'));
+const showTweaks = import.meta.env.DEV || new URLSearchParams(window.location.search).has('tweak');
 
 export default function App() {
   return (
@@ -27,6 +32,11 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      {showTweaks && (
+        <Suspense fallback={null}>
+          <HeroTweaks />
+        </Suspense>
+      )}
     </>
   );
 }

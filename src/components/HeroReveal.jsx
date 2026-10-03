@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { makeTraces } from './HeroCanvas.jsx';
+import { HERO_SETTINGS_EVENT, heroSettings } from '../data/hero.js';
 
 // A hidden layer of white traces under the Hero's background pattern, denser than the pattern
 // itself. It is only ever seen through the flashlight around the mouse (masked in hero.css), so it
@@ -22,9 +23,11 @@ export default function HeroReveal() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      const traces = makeTraces(w, h, 3600, 420);
+      const { area, max, brightness } = heroSettings.reveal;
+      const traces = makeTraces(w, h, area, max);
+      ctx.clearRect(0, 0, w, h);
       ctx.lineWidth = 1;
-      ctx.strokeStyle = `rgba(${text}, 0.5)`;
+      ctx.strokeStyle = `rgba(${text}, ${brightness})`;
       traces.forEach((t) => {
         ctx.beginPath();
         t.pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
@@ -36,10 +39,10 @@ export default function HeroReveal() {
           ctx.beginPath();
           ctx.arc(x, y, 2.6, 0, Math.PI * 2);
           if ((i + j) % 3 === 0) {
-            ctx.fillStyle = `rgba(${text}, 0.75)`;
+            ctx.fillStyle = `rgba(${text}, ${Math.min(1, brightness * 1.5)})`;
             ctx.fill();
           } else {
-            ctx.strokeStyle = `rgba(${text}, 0.6)`;
+            ctx.strokeStyle = `rgba(${text}, ${Math.min(1, brightness * 1.2)})`;
             ctx.stroke();
           }
         });
@@ -53,7 +56,9 @@ export default function HeroReveal() {
       timer = setTimeout(draw, 150);
     });
     ro.observe(canvas);
+    window.addEventListener(HERO_SETTINGS_EVENT, draw);
     return () => {
+      window.removeEventListener(HERO_SETTINGS_EVENT, draw);
       clearTimeout(timer);
       ro.disconnect();
     };

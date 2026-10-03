@@ -4,6 +4,7 @@ import HeroChip from './HeroChip.jsx';
 import HeroReveal from './HeroReveal.jsx';
 import { profile } from '../data/site.js';
 import { loaderConfig } from '../data/loader.js';
+import { HERO_SETTINGS_EVENT, heroSettings } from '../data/hero.js';
 import { emphasize } from '../utils/emphasize.jsx';
 import { isBooting, release } from '../utils/boot.js';
 import useReducedMotion from '../hooks/useReducedMotion.js';
@@ -52,6 +53,23 @@ export default function Hero() {
   const light = useRef({ x: 0, y: 0, tx: 0, ty: 0, raf: 0 });
   useEffect(() => () => cancelAnimationFrame(light.current.raf), []);
 
+  // The flashlight's shape comes from src/data/hero.js (and the tweak panel, while tuning).
+  useEffect(() => {
+    const apply = () => {
+      const f = heroSettings.flashlight;
+      const s = fieldRef.current?.style;
+      if (!s) return;
+      s.setProperty('--spot-r', `${f.radius}px`);
+      s.setProperty('--spot-core', `${f.core}%`);
+      s.setProperty('--spot-falloff', `${f.falloff}%`);
+      s.setProperty('--spot-edge', String(f.edge));
+      s.setProperty('--floor-lit', String(f.dim));
+    };
+    apply();
+    window.addEventListener(HERO_SETTINGS_EVENT, apply);
+    return () => window.removeEventListener(HERO_SETTINGS_EVENT, apply);
+  }, []);
+
   const onPointerMove = (e) => {
     const field = fieldRef.current;
     if (reduced || e.pointerType !== 'mouse' || !field || isBooting()) return;
@@ -74,7 +92,8 @@ export default function Hero() {
     };
     l.raf = requestAnimationFrame(follow);
   };
-  const onPointerLeave = () => fieldRef.current?.classList.remove('is-lit');
+  // (the tweak panel can keep the light on while you adjust it)
+  const onPointerLeave = () => !heroSettings.keepLit && fieldRef.current?.classList.remove('is-lit');
 
   return (
     <section

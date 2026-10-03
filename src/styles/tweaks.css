@@ -1,0 +1,116 @@
+/* Temporary Hero tuning panel (HeroTweaks.jsx). Only loaded in dev or with ?tweak. */
+
+.tweaks {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 400;
+  width: min(320px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(var(--bg-rgb), 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.tweaks__head {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tweaks__body {
+  padding: 0 0.9rem 0.9rem;
+}
+
+.tweaks__check {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  color: var(--muted);
+}
+
+.tweaks__group {
+  margin: 0.8rem 0 0;
+  padding: 0.6rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.tweaks__group legend {
+  padding: 0;
+  font-weight: 600;
+}
+
+.tweaks__count {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.tweaks__row {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.tweaks__label {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+
+.tweaks__label output {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tweaks__row input {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.tweaks__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.tweaks__actions button {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tweaks__actions button:first-child {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.tweaks__note {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  white-space: pre-wrap;
+}
