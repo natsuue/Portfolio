@@ -5,7 +5,7 @@ export const profile = {
   name: 'Nathaniel Suarez',
   fullName: 'Nathaniel T. Suarez',
   availability: 'Available for Opportunities',
-  identity: 'Computer Engineer · Software × Hardware',
+  identity: 'Software Engineer', // the Hero's identity line only; title, meta, About and timeline say Computer Engineer
   statement: 'I build at the intersection of *hardware* and *software*.',
 };
 

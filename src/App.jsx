@@ -8,12 +8,10 @@ import Timeline from './components/Timeline.jsx';
 import Achievements from './components/Achievements.jsx';
 import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
-import LoadingScreen from './components/loader/LoadingScreen.jsx';
 
 export default function App() {
   return (
     <>
-      <LoadingScreen />
       <a className="skip-link" href="#main">
         Skip to content
       </a>

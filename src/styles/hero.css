@@ -3,20 +3,21 @@
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   min-height: 100vh;
   min-height: 100svh;
-  padding-top: calc(var(--header-h) + 3rem);
-  padding-bottom: clamp(3.5rem, 10vh, 6.5rem);
+  padding-top: calc(var(--header-h) + 2rem);
+  padding-bottom: clamp(3rem, 9vh, 6.5rem);
   overflow: hidden;
 }
 
+/* Background pattern (HeroCanvas). Hidden while the intro plays; fades in just after the copy. */
 .hero__field {
   position: absolute;
   inset: -40px;
   z-index: -2;
-  transform: translate3d(var(--px, 0px), calc(var(--py, 0px) + var(--scroll-y, 0px)), 0);
-  transition: transform 0.8s var(--ease-out);
+  transform: translate3d(0, var(--scroll-y, 0px), 0);
+  transition: opacity 0.8s var(--ease-out) 0.2s;
   will-change: transform;
 }
 
@@ -27,16 +28,51 @@
   mask-image: radial-gradient(130% 95% at 78% 30%, #000 25%, rgba(0, 0, 0, 0.35) 60%, transparent 90%);
 }
 
-.hero__glow {
+/* Flashlight: with a mouse over the Hero, the pattern dims to --floor and a soft light around the
+   pointer (--lx / --ly, set in Hero.jsx) reveals it. */
+@property --floor {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+@property --spot {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hero__field {
+    --floor: 1;
+    --spot: 0;
+    --spot-r: clamp(170px, 14vw, 260px);
+    -webkit-mask-image:
+      radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / calc(var(--spot) * 0.55)) 55%, transparent),
+      linear-gradient(rgb(0 0 0 / var(--floor)), rgb(0 0 0 / var(--floor)));
+    mask-image:
+      radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / calc(var(--spot) * 0.55)) 55%, transparent),
+      linear-gradient(rgb(0 0 0 / var(--floor)), rgb(0 0 0 / var(--floor)));
+    -webkit-mask-composite: source-over;
+    mask-composite: add;
+    transition:
+      opacity 0.8s var(--ease-out) 0.2s,
+      --floor 0.7s var(--ease-out),
+      --spot 0.7s var(--ease-out);
+  }
+
+  .hero__field.is-lit {
+    --floor: 0.2;
+    --spot: 1;
+  }
+}
+
+/* The chip and its traces (HeroChip), over the pattern and under the copy. */
+.hero__chip-canvas {
   position: absolute;
+  inset: 0;
   z-index: -1;
-  top: -22vmax;
-  right: -14vmax;
-  width: 62vmax;
-  height: 62vmax;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.11), rgba(var(--accent-2-rgb), 0.04) 55%, transparent);
-  animation: glow-drift 16s ease-in-out infinite alternate;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
@@ -45,113 +81,180 @@
   position: absolute;
   inset: auto 0 0;
   z-index: -1;
-  height: 30%;
+  height: 22%;
   background: linear-gradient(to bottom, transparent, var(--bg));
   pointer-events: none;
 }
 
+/* Words on the left, the chip on the right. */
+.hero__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
 .hero__content {
+  --indent: clamp(0rem, 7vw, 8rem);
   position: relative;
   will-change: transform, opacity;
 }
 
-.anim {
-  animation: fade-up 1s var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 90ms + 250ms);
-}
-
-.hero__eyebrow {
+.hero__status {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
-  padding: 0.5rem 0.9rem;
+  gap: 0.6rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.75rem;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: rgba(10, 11, 13, 0.55);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(var(--bg-rgb), 0.75);
   color: var(--muted);
-  font-size: 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
-.pulse-dot {
+.hero__dot {
   flex: none;
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  animation: pulse 2.4s var(--ease-out) infinite;
 }
 
+/* 01 — Identity: small */
+.hero__identity {
+  margin-top: clamp(1.6rem, 4vh, 2.5rem);
+  color: var(--accent);
+  font-size: clamp(0.8125rem, 1vw, 0.9375rem);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+/* 02 — Name: huge */
 .hero__name {
-  margin-left: -0.05em;
-  font-size: clamp(3.5rem, 13vw, 12rem);
+  margin: 0.9rem 0 0 -0.04em;
+  font-size: clamp(3.2rem, 7.6vw, 7.6rem);
   font-weight: 600;
-  letter-spacing: -0.06em;
-  line-height: 0.86;
+  letter-spacing: -0.04em;
+  line-height: 0.88;
 }
 
 .hero__line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.07em;
+  padding-bottom: 0.06em;
 }
 
 .hero__line > span {
   display: inline-block;
-  animation: rise 1.15s var(--ease-out) both;
-  animation-delay: calc(var(--i) * 100ms + 120ms);
 }
 
 .hero__line:nth-child(2) {
-  padding-left: clamp(0rem, 9vw, 10rem);
+  padding-left: var(--indent);
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(236, 235, 230, 0.85);
+  -webkit-text-stroke: 1.5px rgba(var(--text-rgb), 0.9);
 }
 
-/* 01 — Identity: small */
-.hero__identity {
-  margin-bottom: clamp(1rem, 2.4vw, 1.6rem);
-  color: var(--accent);
-  font-size: clamp(0.68rem, 1.1vw, 0.8rem);
-  letter-spacing: 0.14em;
-  line-height: 1.6;
-}
-
-/* 03 — Philosophy: medium */
+/* 03 — Philosophy: medium, aligned to the indent of the second line of the name */
 .hero__statement {
-  max-width: 17ch;
-  margin-top: clamp(2rem, 5vw, 3.25rem);
+  max-width: 22ch;
+  margin: clamp(1.75rem, 4.5vh, 3rem) 0 0 var(--indent);
+  padding-bottom: 4px;
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 3.8vw, 3.3rem);
-  line-height: 1.02;
+  font-size: clamp(1.8rem, 2.9vw, 2.8rem);
+  line-height: 1.06;
   letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 .hero__statement em {
   color: var(--accent);
 }
 
-@media (max-width: 599px) {
+/* Where HeroChip draws the chip. The button covers the chip itself. */
+.hero__chip {
+  position: relative;
+  justify-self: center;
+  width: 100%;
+  max-width: 540px;
+  aspect-ratio: 1;
+}
+
+.hero__chip-hit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  padding: 0;
+  border: 0;
+  border-radius: 14%;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero__chip-hit:focus-visible {
+  outline-offset: 8px;
+}
+
+/* One entrance: the name rises, the rest settles in after it. Held while the intro plays. */
+.hero__line > span {
+  animation: rise 1.1s var(--ease-out) both;
+  animation-delay: calc(var(--i) * 110ms + 100ms);
+}
+
+.hero__fade {
+  animation: hero-settle 1s var(--ease-out) both;
+  animation-delay: var(--d, 0s);
+}
+
+/* Reduced motion: everything is simply there (base.css shortens durations, not delays). */
+@media (prefers-reduced-motion: reduce) {
+  .hero__fade,
+  .hero__line > span {
+    animation-delay: 0s;
+  }
+}
+
+@keyframes hero-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+    filter: blur(4px);
+  }
+}
+
+@media (max-width: 767px) {
   .hero {
-    padding-top: calc(var(--header-h) + 2rem);
+    justify-content: flex-start;
+    padding-top: calc(var(--header-h) + 0.5rem);
+  }
+
+  .hero__stage {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .hero__chip {
+    order: -1;
+    width: min(62vw, 260px);
+  }
+
+  .hero__content {
+    --indent: 1.4rem;
+  }
+
+  .hero__name {
+    font-size: clamp(3rem, 13vw, 4.2rem);
+  }
+
+  .hero__statement {
+    max-width: 19ch;
+    font-size: 1.7rem;
   }
 }
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.55);
-  }
-  70%,
-  100% {
-    box-shadow: 0 0 0 9px rgba(var(--accent-rgb), 0);
-  }
-}
-
-@keyframes glow-drift {
-  to {
-    transform: translate3d(-6vmax, 5vmax, 0) scale(1.08);
-  }
-}
-

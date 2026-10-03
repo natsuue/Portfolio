@@ -2,6 +2,7 @@
 :root {
   /* Surfaces */
   --bg: #0a0b0d;
+  --bg-rgb: 10, 11, 13;
   --bg-2: #0f1114;
   --surface: #13161a;
   --surface-2: #1a1e23;
@@ -10,6 +11,7 @@
 
   /* Text */
   --text: #ecebe6;
+  --text-rgb: 236, 235, 230; /* for rgba() and the canvases */
   --muted: #a6a8ae;
   --dim: #85888f;
 
@@ -20,7 +22,7 @@
   --accent-hover: #85c9ff;
   --accent-ink: #0a0b0d;
   --accent-soft: rgba(var(--accent-rgb), 0.1);
-  /* Second accent: amber, for contrast (project labels, the 3D sensor, the Hero's glow). */
+  /* Second accent: amber, for contrast (project labels, the 3D sensor). */
   --accent-2-rgb: 255, 181, 71;
   --accent-2: rgb(var(--accent-2-rgb));
   --danger: #ff9a8f;

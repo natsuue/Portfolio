@@ -35,12 +35,12 @@ to skip the intro when checking other sections.
 - `src/data/` — **all content and settings.** Edit these, not components, for content changes.
   - `site.js` (hero, about, contact, nav, footer) · `skills.js` · `projects.js` (projects and
     case studies) · `timeline.js` · `achievements.js`
-  - `loader.js` — intro timing and density, tuned by Nathaniel in a prototype. Treat these values
-    as his decisions.
+  - `loader.js` — intro timing, the chip's trace layout, and its tap and hint timing. Chosen by
+    Nathaniel from mockups. Treat these values as his decisions.
   - `model.js` — 3D exploded-view parts (mesh names, explode offsets, order, labels).
-- `src/components/` — one component per section. `loader/` holds the intro (`LoadingScreen`,
-  `generateBurst`, `burstSystem`). `ExplodedModel` and the lazily loaded `ModelStage` hold the 3D
-  section.
+- `src/components/` — one component per section. `HeroChip` draws the Hero's NS chip and plays the
+  intro; `HeroCanvas` is the Hero's background pattern. `ExplodedModel` and the lazily loaded
+  `ModelStage` hold the 3D section.
 - `src/styles/` — `tokens.css` (palette, type, spacing) plus one stylesheet per section, all
   imported in `index.css`.
 - In copy strings, `*word*` renders as an italic serif accent (`utils/emphasize.jsx`).
@@ -49,16 +49,24 @@ to skip the intro when checking other sections.
 
 - **Palette:** blue `--accent-rgb: 71, 175, 255` (#47afff) and amber second accent
   `--accent-2-rgb: 255, 181, 71`, both in `tokens.css`. Use `var(--accent)` or
-  `rgba(var(--accent-rgb), a)`, and never hardcode colours. The intro's burst colour is `hue: 206`
-  in `loader.js`; keep it matched to the accent if either changes.
+  `rgba(var(--accent-rgb), a)`, and never hardcode colours. The canvases read `--accent-rgb` and
+  `--text-rgb` at runtime.
 - **Type:** Geist (sans), Geist Mono (labels), Instrument Serif italic (accents). Dark background
   `#0a0b0d`.
 - **NS mark:** "Routed Trace" monogram (`NSLogo.jsx`), also used in the nav, the favicon, and the
-  static first frame in `index.html`.
-- **Intro:** circuit burst from the NS chip, about 3 s. Plays on **every visit** with no skip.
-  Direct links (`/#…`) bypass it. Reduced motion shows a still frame and then fades. An 8 s safety
-  timeout in `index.html` makes sure the page can never stay covered.
-- **Hero:** availability pill, identity line, name, statement — nothing else (no CTAs, by request).
+  Hero chip.
+- **Intro:** plays inside the Hero, about 3 s, on **every visit** with no skip. The NS chip is in its
+  Hero spot from the first frame. It lights up, its traces escape past the screen edges, then they
+  settle back to short resting traces while the copy and nav come in. The background pattern follows.
+  No glow ring. Direct links (`/#…`) and reduced motion show the settled Hero straight away. An 8 s
+  safety timeout in `index.html` makes sure the copy can never stay hidden.
+- **Hero:** availability pill, identity line ("Software Engineer", Hero only; everywhere else says
+  Computer Engineer), name, statement — no CTAs, by request. The NS chip is on the right (above the
+  copy on mobile).
+- **Hero interaction:** with a mouse, the background pattern dims and a soft light around the pointer
+  reveals it. The chip is a button: hover or focus lifts it, lights its pins and runs a light round
+  its edge; clicking or tapping it replays the escape. Without hover, the edge light runs once every
+  6 s as a hint. None of this runs under reduced motion.
 - **Header:** keeps both the "Contact" link and the "Let's talk" button (his choice).
 - **Section order:** Hero → About → Skills → Projects → Inside PuriSense (3D, scroll-pinned) →
   Journey → Certifications → Contact.

@@ -6,6 +6,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--surface-2) var(--bg);
 }
 
 @media (prefers-reduced-motion: no-preference) {

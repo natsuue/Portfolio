@@ -1,21 +1,21 @@
-/* "Power-up" intro: a circuit burst leaving the NS chip. --fade and the NS / chip opacities are
-   driven from JS each frame; --burst-core / --burst-mid come from the configured hue. */
+/* "Power-up" intro. index.html adds `is-booting` to <html> on a normal visit; HeroChip plays the
+   intro inside the Hero and removes the class when the copy should come in. Until then: lock
+   scroll, hide the nav and the background pattern, and hold the Hero's entrance animations. */
 
-:root {
-  --ns-size: clamp(88px, 12vw, 150px); /* keep in sync with nsSizeFor() and index.html */
-}
-
-/* While booting: lock scroll, hide the nav, and hold the Hero's entrance animations so they
-   play at the handover rather than behind the intro. */
 html.is-booting {
   overflow: hidden;
 }
 
 html.is-booting .site-header {
   opacity: 0;
+  pointer-events: none;
 }
 
-html.is-booting .anim,
+html.is-booting .hero__field {
+  opacity: 0;
+}
+
+html.is-booting .hero__fade,
 html.is-booting .hero__line > span {
   animation-play-state: paused;
 }
@@ -25,85 +25,5 @@ html.is-booting .hero__line > span {
     background-color 0.4s,
     border-color 0.4s,
     backdrop-filter 0.4s,
-    opacity 0.8s var(--ease-out) 0.15s;
-}
-
-.loader {
-  --fade: 1;
-  position: fixed;
-  inset: 0;
-  z-index: 300;
-  overflow: hidden;
-}
-
-html:not(.is-booting) .loader {
-  pointer-events: none;
-}
-
-/* The dark backdrop fades away to reveal the Hero underneath. */
-.loader__bg {
-  position: absolute;
-  inset: 0;
-  background: var(--bg);
-  opacity: var(--fade);
-}
-
-.loader__burst {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* Chip outline (body + 8 pins per side) around NS */
-.loader__chip {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: calc(var(--ns-size) * 1.45);
-  height: calc(var(--ns-size) * 1.45);
-  translate: -50% -50%;
-  overflow: visible;
-  stroke: var(--burst-mid);
-  filter: drop-shadow(0 0 6px var(--burst-mid));
-  opacity: 0;
-}
-
-/* NS: a dim base, a blurred halo and a lit layer */
-.loader__ns {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: var(--ns-size);
-  height: var(--ns-size);
-  translate: -50% -50%;
-}
-
-.ns-layer {
-  position: absolute;
-  inset: 0;
-}
-
-.ns-layer .ns-logo {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.ns-base {
-  color: rgba(236, 235, 230, 0.32);
-  --ns-pad: rgba(236, 235, 230, 0.25);
-}
-
-.ns-lit {
-  color: var(--burst-core);
-  --ns-pad: var(--burst-core);
-  opacity: 0;
-}
-
-.ns-halo {
-  color: var(--burst-mid);
-  --ns-pad: var(--burst-mid);
-  filter: blur(9px);
-  opacity: 0;
+    opacity 0.8s var(--ease-out) 0.1s;
 }
