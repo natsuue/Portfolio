@@ -62,7 +62,11 @@
 
 .tweaks__row {
   display: block;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.tweaks__row label {
+  display: block;
 }
 
 .tweaks__label {
@@ -78,9 +82,55 @@
   font-variant-numeric: tabular-nums;
 }
 
-.tweaks__row input {
+.tweaks__track {
+  position: relative;
+  display: block;
+  --thumb: 16px; /* Chrome's default range thumb, so the tick lines up with the thumb's centre */
+}
+
+.tweaks__track input {
+  position: relative;
   width: 100%;
+  margin: 0.35rem 0 0;
   accent-color: var(--accent);
+}
+
+/* Default-value tick: an amber notch above and below the track. */
+.tweaks__tick {
+  position: absolute;
+  top: 0.15rem;
+  bottom: -0.2rem;
+  left: calc(var(--thumb) / 2 + var(--p) * (100% - var(--thumb)));
+  width: 2px;
+  translate: -50% 0;
+  border-radius: 1px;
+  background: var(--accent-2);
+}
+
+.tweaks__default {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--dim);
+  font-size: 0.7rem;
+}
+
+.tweaks__default::before {
+  content: '';
+  width: 2px;
+  height: 0.7rem;
+  border-radius: 1px;
+  background: var(--accent-2);
+}
+
+.tweaks__default button {
+  padding: 0 0.45rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
 }
 
 .tweaks__actions {

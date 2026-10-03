@@ -152,21 +152,37 @@ export default function HeroTweaks() {
               </legend>
               {section.rows.map((row) => {
                 const value = heroSettings[row.group][row.key];
+                const def = DEFAULTS[row.group][row.key];
+                const changed = value !== def;
                 return (
-                  <label key={row.key} className="tweaks__row">
-                    <span className="tweaks__label">
-                      {row.label}
-                      <output>{value}</output>
+                  <div key={row.key} className="tweaks__row">
+                    <label>
+                      <span className="tweaks__label">
+                        {row.label}
+                        <output>{value}</output>
+                      </span>
+                      {/* the tick on the track marks the default value */}
+                      <span className="tweaks__track" style={{ '--p': (def - row.min) / (row.max - row.min) }}>
+                        <span className="tweaks__tick" aria-hidden="true" />
+                        <input
+                          type="range"
+                          min={row.min}
+                          max={row.max}
+                          step={row.step}
+                          value={value}
+                          onChange={(e) => set(row.group, row.key, Number(e.target.value))}
+                        />
+                      </span>
+                    </label>
+                    <span className="tweaks__default">
+                      Default {def}
+                      {changed && (
+                        <button type="button" onClick={() => set(row.group, row.key, def)}>
+                          use
+                        </button>
+                      )}
                     </span>
-                    <input
-                      type="range"
-                      min={row.min}
-                      max={row.max}
-                      step={row.step}
-                      value={value}
-                      onChange={(e) => set(row.group, row.key, Number(e.target.value))}
-                    />
-                  </label>
+                  </div>
                 );
               })}
             </fieldset>
