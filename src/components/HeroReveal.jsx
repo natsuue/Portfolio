@@ -26,7 +26,7 @@ export default function HeroReveal() {
       const { area, max, brightness } = heroSettings.reveal;
       const traces = makeTraces(w, h, area, max);
       ctx.clearRect(0, 0, w, h);
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 0.75;
       ctx.strokeStyle = `rgba(${text}, ${brightness})`;
       traces.forEach((t) => {
         ctx.beginPath();
@@ -37,7 +37,7 @@ export default function HeroReveal() {
       traces.forEach((t, i) => {
         [t.pts[0], t.pts[t.pts.length - 1]].forEach(([x, y], j) => {
           ctx.beginPath();
-          ctx.arc(x, y, 2.6, 0, Math.PI * 2);
+          ctx.arc(x, y, 2.2, 0, Math.PI * 2);
           if ((i + j) % 3 === 0) {
             ctx.fillStyle = `rgba(${text}, ${Math.min(1, brightness * 1.5)})`;
             ctx.fill();

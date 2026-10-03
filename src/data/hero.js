@@ -6,7 +6,8 @@ export const heroSettings = {
   lines: { area: 9000, max: 170 },
 
   // The hidden white traces that only show under the flashlight.
-  reveal: { area: 3600, max: 420, brightness: 0.5 },
+  // Kept sparse and dim so the Hero copy stays readable when the light passes over it.
+  reveal: { area: 7000, max: 220, brightness: 0.3 },
 
   flashlight: {
     radius: 280, // px
