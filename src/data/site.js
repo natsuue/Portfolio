@@ -9,33 +9,21 @@ export const profile = {
   statement: 'I build at the intersection of *hardware* and *software*.',
 };
 
+// About + Skills, merged: a card with the photo burst and one sentence, over the skills marquee
+// (the skills come from skills.js). The photos are one burst, in order: looking away, turning,
+// facing the camera, smiling. Scrolling steps through them.
 export const about = {
   title: 'Engineering *across* the stack.',
-  lead:
-    "I'm a Computer Engineering graduate of De La Salle University Dasmariñas, and I'm drawn to the whole path a signal takes — from a sensor on a board to a number on someone's screen.",
-  body:
-    'My work spans full-stack web development, mobile apps, IoT systems, and machine learning. I’m most comfortable in Python, C/C++, PHP, SQL, and Flutter, and most interested in projects where hardware and software have to meet. PuriSense — a team thesis where I worked across the ESP32 firmware, the Firebase backend, the Flutter app, and the hardware itself — is the clearest example.',
-  story: {
-    label: 'Field note — Filinvest Alabang, 2026',
-    text:
-      'Not every build starts from a clean slate. As an IT Business Solutions intern, I built a Smartsheet-based project management tool inside Smartsheet’s Dynamic View — deliberately, to avoid extra subscription costs — and engineered a unique-identifier system to fix a dropdown-deduplication problem the platform couldn’t handle on its own. Engineering around real constraints is part of the job, and it’s a part I enjoy.',
-  },
-  facts: [
-    { label: 'Education', value: 'BS Computer Engineering, De La Salle University Dasmariñas · 2022–2026' },
-    { label: 'Works in', value: 'Python · C/C++ · PHP · SQL · Flutter' },
-    { label: 'Certified', value: 'Cisco Certified Network Associate (CCNA)' },
-    { label: 'Looking for', value: 'A full-stack or software engineering role — firmware to cloud-connected apps' },
+  // the card's sentence; the words in *asterisks* are set in the accent colour
+  statement:
+    'I’m a Computer Engineering graduate of De La Salle University Dasmariñas, drawn to the whole path a signal takes, from a sensor on a board to *a number on someone’s screen.*',
+  photos: [
+    { src: '/images/about/grad-1.jpg', position: '47% 40%' },
+    { src: '/images/about/grad-2.jpg', position: '49% 40%' },
+    { src: '/images/about/grad-3.jpg', position: '51% 40%' },
+    { src: '/images/about/grad-4.jpg', position: '49% 40%' },
   ],
-  diagram: {
-    caption: 'Fig. 01 — PuriSense, edge → cloud → mobile',
-    nodes: [
-      { tag: 'Sense', label: '2× ZH03B laser sensors', detail: 'UART · intake + exhaust' },
-      { tag: 'Edge', label: 'ESP32 firmware', detail: 'FreeRTOS dual-core · PWM fans · 4 modes' },
-      { tag: 'Live', label: 'Firebase Realtime Database', detail: 'every 1 s · SSE commands' },
-      { tag: 'History', label: 'Cloud Function → Firestore', detail: '1 snapshot / minute, 24/7' },
-      { tag: 'App', label: 'Flutter app', detail: 'live dashboard · controls · reports' },
-    ],
-  },
+  photoAlt: 'Nathaniel Suarez in his graduation gown',
 };
 
 export const contact = {
@@ -55,7 +43,6 @@ export const contact = {
 
 export const navLinks = [
   { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
   { id: 'projects', label: 'Projects' },
   { id: 'journey', label: 'Journey' },
   { id: 'contact', label: 'Contact' },

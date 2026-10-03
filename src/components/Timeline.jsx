@@ -41,7 +41,7 @@ export default function Timeline() {
   return (
     <section id="journey" className="section journey" aria-labelledby="journey-title">
       <div className="container">
-        <SectionHeader index="05" label="Journey" id="journey-title" title="The *path* so far." />
+        <SectionHeader index="04" label="Journey" id="journey-title" title="The *path* so far." />
 
         <div className="timeline" ref={listRef}>
           <span className="timeline__progress" aria-hidden="true" />

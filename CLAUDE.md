@@ -33,7 +33,7 @@ to skip the intro when checking other sections.
 ## Structure
 
 - `src/data/` — **all content and settings.** Edit these, not components, for content changes.
-  - `site.js` (hero, about, contact, nav, footer) · `skills.js` · `projects.js` (projects and
+  - `site.js` (hero, about card, contact, nav, footer) · `skills.js` (the About marquee rows) · `projects.js` (projects and
     case studies) · `timeline.js` · `achievements.js`
   - `loader.js` — intro timing, the chip's trace layout, and its tap and hint timing. Chosen by
     Nathaniel from mockups. Treat these values as his decisions.
@@ -68,8 +68,14 @@ to skip the intro when checking other sections.
   its edge; clicking or tapping it replays the escape. Without hover, the edge light runs once every
   6 s as a hint. None of this runs under reduced motion.
 - **Header:** keeps both the "Contact" link and the "Let's talk" button (his choice).
-- **Section order:** Hero → About → Skills → Projects → Inside PuriSense (3D, scroll-pinned) →
-  Journey → Certifications → Contact.
+- **Section order:** Hero → About (About and Skills merged) → Projects → Inside PuriSense (3D,
+  scroll-pinned) → Journey → Certifications → Contact. The nav has one "About" link for both.
+- **About:** a card in the same spot as the Hero's chip (so it reads as the chip's replacement):
+  his four graduation photos (`public/images/about/`, one burst stepped through by scroll, natural
+  colour), a small "Engineering *across* the stack." heading, and only the first About sentence, set
+  large in the serif. Four rows of large skill names slide behind it. Pins on wide screens; on phones
+  the card comes first, then the rows. Next step (not built): the card rises into the Hero to take
+  the chip's place, with the Hero's background staying fixed behind both.
 - PuriSense is a **team thesis**. Always credit it as such, with his role (firmware, Flutter app,
   Firebase backend, hardware).
 - Respect `prefers-reduced-motion` in anything animated, and keep mobile layouts intentional.

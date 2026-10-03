@@ -1,7 +1,6 @@
 import Nav from './components/Nav.jsx';
 import Hero from './components/Hero.jsx';
 import About from './components/About.jsx';
-import Skills from './components/Skills.jsx';
 import Projects from './components/Projects.jsx';
 import ExplodedModel from './components/ExplodedModel.jsx';
 import Timeline from './components/Timeline.jsx';
@@ -24,7 +23,6 @@ export default function App() {
       <main id="main" tabIndex={-1}>
         <Hero />
         <About />
-        <Skills />
         <Projects />
         <ExplodedModel />
         <Timeline />

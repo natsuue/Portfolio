@@ -64,7 +64,7 @@ export default function Projects() {
     <section id="projects" className="section projects" aria-labelledby="projects-title">
       <div className="container">
         <SectionHeader
-          index="03"
+          index="02"
           label="Projects"
           id="projects-title"
           title="Selected *work*."

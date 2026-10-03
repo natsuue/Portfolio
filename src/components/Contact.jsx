@@ -112,7 +112,7 @@ export default function Contact() {
       <div className="container contact__grid">
         <Reveal className="contact__intro">
           <p className="section-head__label mono">
-            <span className="section-head__index">07</span>
+            <span className="section-head__index">06</span>
             <span className="section-head__rule" aria-hidden="true" />
             Contact
           </p>
