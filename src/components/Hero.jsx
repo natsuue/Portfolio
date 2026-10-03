@@ -9,6 +9,8 @@ import { emphasize } from '../utils/emphasize.jsx';
 import { isBooting, release } from '../utils/boot.js';
 import useReducedMotion from '../hooks/useReducedMotion.js';
 
+const IDLE_MS = 3000;
+
 export default function Hero() {
   const contentRef = useRef(null);
   const fieldRef = useRef(null);
@@ -50,8 +52,16 @@ export default function Hero() {
 
   // Flashlight: with a mouse, the background pattern dims and a soft light around the pointer
   // reveals it, along with a hidden layer of white traces (HeroReveal). The light trails the pointer slightly. Styles in hero.css (.hero__field.is-lit).
-  const light = useRef({ x: 0, y: 0, tx: 0, ty: 0, raf: 0 });
-  useEffect(() => () => cancelAnimationFrame(light.current.raf), []);
+  // After IDLE_MS without mouse movement the light goes out and the whole pattern shows again,
+  // as it does when the mouse leaves the Hero; moving the mouse brings the light back.
+  const light = useRef({ x: 0, y: 0, tx: 0, ty: 0, raf: 0, idle: 0 });
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(light.current.raf);
+      clearTimeout(light.current.idle);
+    },
+    []
+  );
 
   // The flashlight's shape comes from src/data/hero.js (and the tweak panel, while tuning).
   useEffect(() => {
@@ -74,6 +84,8 @@ export default function Hero() {
     const field = fieldRef.current;
     if (reduced || e.pointerType !== 'mouse' || !field || isBooting()) return;
     const l = light.current;
+    clearTimeout(l.idle);
+    l.idle = setTimeout(() => !heroSettings.keepLit && field.classList.remove('is-lit'), IDLE_MS);
     const r = field.getBoundingClientRect();
     l.tx = e.clientX - r.left;
     l.ty = e.clientY - r.top;
@@ -93,7 +105,10 @@ export default function Hero() {
     l.raf = requestAnimationFrame(follow);
   };
   // (the tweak panel can keep the light on while you adjust it)
-  const onPointerLeave = () => !heroSettings.keepLit && fieldRef.current?.classList.remove('is-lit');
+  const onPointerLeave = () => {
+    clearTimeout(light.current.idle);
+    if (!heroSettings.keepLit) fieldRef.current?.classList.remove('is-lit');
+  };
 
   return (
     <section
