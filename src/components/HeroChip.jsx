@@ -117,6 +117,7 @@ export default function HeroChip({ slotRef, hitRef, playing }) {
       release();
     }
 
+    const hit = hitRef?.current;
     let w = 0, h = 0, dpr = 1, chip = null;
     let raf = 0, last = performance.now(), inView = true;
     let hover = 0, hoverOn = false, fireAt = -99, pressAt = -99, tNow = 0;
@@ -131,7 +132,9 @@ export default function HeroChip({ slotRef, hitRef, playing }) {
       dpr = Math.min(window.devicePixelRatio || 1, w < 600 ? 1.5 : 2);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
-      chip = buildChip(w, h, { x: sr.left - r.left, y: sr.top - r.top, width: sr.width, height: sr.height });
+      // on wide screens the canvas is fixed to the screen (hero.css), so place the chip where it sits at the top of the page
+      const top = getComputedStyle(canvas).position === 'fixed' ? window.scrollY : 0;
+      chip = buildChip(w, h, { x: sr.left - r.left, y: sr.top - r.top + top, width: sr.width, height: sr.height });
     };
 
     // stroke part of a trace, from distance a to b along it
@@ -318,7 +321,16 @@ export default function HeroChip({ slotRef, hitRef, playing }) {
         c.released = true;
         release();
       }
-      draw(t, dt);
+      // handover: as the About block slides up over the chip, the chip fades out under it
+      const about = document.getElementById('about');
+      const k = about ? clamp01(1 - about.getBoundingClientRect().top / window.innerHeight) : 0;
+      const fade = 1 - smooth((k - 0.8) / 0.18);
+      canvas.style.opacity = fade < 1 ? fade.toFixed(3) : '';
+      if (hit) {
+        hit.style.transform = window.scrollY ? `translateY(${window.scrollY}px)` : ''; // the button stays on the drawn chip
+        hit.style.visibility = fade > 0.5 ? '' : 'hidden';
+      }
+      if (fade > 0) draw(t, dt);
       raf = requestAnimationFrame(tick);
     };
     const start = () => {
@@ -339,7 +351,6 @@ export default function HeroChip({ slotRef, hitRef, playing }) {
     start();
 
     // the chip button
-    const hit = hitRef?.current;
     const onEnter = (e) => e.pointerType === 'mouse' && (hoverOn = true);
     const onLeave = () => (hoverOn = false);
     const onFocus = () => (hoverOn = hit.matches(':focus-visible'));

@@ -103,6 +103,30 @@
   pointer-events: none;
 }
 
+/* The background pattern and the chip stay put while the Hero copy scrolls away; the About block
+   then slides up over the chip, and the pattern fades out as About ends (Hero.jsx, HeroChip.jsx).
+   Under reduced motion they scroll with the page as normal. */
+/* The chip stays put only on wide screens; on phones it would sit over the copy as it scrolls by. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 861px) {
+  .hero__chip-canvas {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__field {
+    position: fixed;
+    transform: none;
+  }
+
+
+  .hero::after {
+    display: none;
+  }
+}
+
 .hero::after {
   content: '';
   position: absolute;

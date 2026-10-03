@@ -25,7 +25,7 @@ export default function Hero() {
     if (!playing) release();
   }, [playing]);
 
-  // Scroll parallax: the trace field drifts slower than the page, the copy fades out.
+  // Scroll: the copy drifts and fades out; the background pattern stays fixed, then fades with About.
   useEffect(() => {
     if (reduced) return;
     let raf = 0;
@@ -38,7 +38,16 @@ export default function Hero() {
           contentRef.current.style.transform = `translate3d(0, ${y * 0.16}px, 0)`;
           contentRef.current.style.opacity = String(Math.max(0, 1 - y / (vh * 1.05)));
         }
-        fieldRef.current?.style.setProperty('--scroll-y', `${y * 0.35}px`);
+        // The pattern is fixed behind the Hero and About; it fades out as About ends, and stops
+        // drawing once it's gone. (Left alone while the intro holds it hidden.)
+        const field = fieldRef.current;
+        const about = document.getElementById('about');
+        if (field && about && !isBooting()) {
+          const fade = Math.min(1, Math.max(0, (about.getBoundingClientRect().bottom - vh * 0.45) / (vh * 0.55)));
+          field.style.transition = fade < 1 ? 'none' : '';
+          field.style.opacity = fade < 1 ? fade.toFixed(3) : '';
+          field.style.display = fade <= 0 ? 'none' : '';
+        }
       });
     };
     onScroll();
@@ -47,6 +56,7 @@ export default function Hero() {
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', onScroll);
       if (contentRef.current) contentRef.current.style.cssText = '';
+      if (fieldRef.current) Object.assign(fieldRef.current.style, { opacity: '', display: '', transition: '' });
     };
   }, [reduced]);
 

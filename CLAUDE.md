@@ -70,12 +70,14 @@ to skip the intro when checking other sections.
 - **Header:** keeps both the "Contact" link and the "Let's talk" button (his choice).
 - **Section order:** Hero → About (About and Skills merged) → Projects → Inside PuriSense (3D,
   scroll-pinned) → Journey → Certifications → Contact. The nav has one "About" link for both.
-- **About:** a card in the same spot as the Hero's chip (so it reads as the chip's replacement):
-  his four graduation photos (`public/images/about/`, one burst stepped through by scroll, natural
-  colour), a small "Engineering *across* the stack." heading, and only the first About sentence, set
-  large in the serif. Four rows of large skill names slide behind it. Pins on wide screens; on phones
-  the card comes first, then the rows. Next step (not built): the card rises into the Hero to take
-  the chip's place, with the Hero's background staying fixed behind both.
+- **About:** one block, the card on the left joined to a skills box on the right. The card holds his
+  four graduation photos (`public/images/about/`, one burst stepped through by scroll, natural
+  colour), a small "Engineering *across* the stack." heading, and only the first About sentence set
+  large in the serif. The box has four rows (Hardware, Software, Web, Mobile + Tools) with fixed
+  labels and the skill names sliding. Pins on wide screens; on phones the box sits under the card.
+- **Hero → About handover ("slide over"):** with motion allowed, the Hero's background pattern is
+  fixed behind the Hero and About and fades out as About ends; on wide screens the chip also stays
+  put and fades as the About block slides up over it. Reduced motion: everything scrolls normally.
 - PuriSense is a **team thesis**. Always credit it as such, with his role (firmware, Flutter app,
   Firebase backend, hardware).
 - Respect `prefers-reduced-motion` in anything animated, and keep mobile layouts intentional.
