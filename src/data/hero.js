@@ -3,10 +3,10 @@
 
 export const heroSettings = {
   // The background pattern: one trace per `area` px² of screen (smaller = more lines), up to `max`.
-  lines: { area: 9000, max: 170 },
+  lines: { area: 2000, max: 400 },
 
   // The hidden white traces that only show under the flashlight.
-  reveal: { area: 3600, max: 420, brightness: 0.5 },
+  reveal: { area: 20000, max: 100, brightness: 1 },
 
   flashlight: {
     radius: 280, // px
