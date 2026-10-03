@@ -3,11 +3,10 @@ import { HERO_SETTINGS_EVENT, heroSettings } from '../data/hero.js';
 import '../styles/tweaks.css';
 
 // Temporary tuning panel for the Hero's background pattern and flashlight. Shown in `npm run dev`
-// or with ?tweak in the URL (see App.jsx). Changes apply live but only until the page reloads: the
-// site always starts from the fixed values in src/data/hero.js. "Copy settings" gives the values to
-// paste there. Remove once the values are settled.
+// or with ?tweak in the URL (see App.jsx). Changes apply live and are kept in this browser; "Copy
+// settings" gives the values to paste into src/data/hero.js. Remove once the values are settled.
 
-const OLD_STORE = 'hero-tweaks'; // where an earlier version kept tweaks; cleared so it can't linger
+const STORE = 'hero-tweaks';
 const DEFAULTS = JSON.parse(JSON.stringify(heroSettings));
 
 const CONTROLS = [
@@ -40,6 +39,15 @@ const CONTROLS = [
 
 const notify = () => window.dispatchEvent(new Event(HERO_SETTINGS_EVENT));
 
+function save() {
+  try {
+    const { lines, reveal, flashlight } = heroSettings;
+    localStorage.setItem(STORE, JSON.stringify({ lines, reveal, flashlight }));
+  } catch {
+    /* storage unavailable: tweaks just won't survive a reload */
+  }
+}
+
 function snippet() {
   const { lines: l, reveal: r, flashlight: f } = heroSettings;
   return [
@@ -64,11 +72,17 @@ export default function HeroTweaks() {
   const [copied, setCopied] = useState('');
   const refresh = () => setVersion((v) => v + 1);
 
+  // restore this browser's last tweaks
   useEffect(() => {
     try {
-      localStorage.removeItem(OLD_STORE);
+      const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
+      if (saved) {
+        for (const group of ['lines', 'reveal', 'flashlight']) Object.assign(heroSettings[group], saved[group]);
+        notify();
+        refresh();
+      }
     } catch {
-      /* storage unavailable: nothing to clear */
+      /* ignore unreadable storage */
     }
     return () => {
       heroSettings.keepLit = false;
@@ -77,12 +91,18 @@ export default function HeroTweaks() {
 
   const set = (group, key, value) => {
     heroSettings[group][key] = value;
+    save();
     notify();
     refresh();
   };
 
   const reset = () => {
     for (const group of ['lines', 'reveal', 'flashlight']) Object.assign(heroSettings[group], DEFAULTS[group]);
+    try {
+      localStorage.removeItem(STORE);
+    } catch {
+      /* ignore */
+    }
     notify();
     refresh();
   };
