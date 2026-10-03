@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import HeroCanvas from './HeroCanvas.jsx';
 import HeroChip from './HeroChip.jsx';
+import HeroReveal from './HeroReveal.jsx';
 import { profile } from '../data/site.js';
 import { loaderConfig } from '../data/loader.js';
 import { emphasize } from '../utils/emphasize.jsx';
@@ -47,7 +48,7 @@ export default function Hero() {
   }, [reduced]);
 
   // Flashlight: with a mouse, the background pattern dims and a soft light around the pointer
-  // reveals it. The light trails the pointer slightly. Styles in hero.css (.hero__field.is-lit).
+  // reveals it, along with a hidden layer of white traces (HeroReveal). The light trails the pointer slightly. Styles in hero.css (.hero__field.is-lit).
   const light = useRef({ x: 0, y: 0, tx: 0, ty: 0, raf: 0 });
   useEffect(() => () => cancelAnimationFrame(light.current.raf), []);
 
@@ -85,6 +86,7 @@ export default function Hero() {
     >
       <div className="hero__field" ref={fieldRef} aria-hidden="true">
         <HeroCanvas />
+        {!reduced && <HeroReveal />}
       </div>
       <HeroChip slotRef={slotRef} hitRef={hitRef} playing={playing} />
 

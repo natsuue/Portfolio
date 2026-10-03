@@ -7,6 +7,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   scrollbar-color: var(--surface-2) var(--bg);
+  /* Keep the scrollbar's space while scrolling is locked (intro, case studies), so nothing shifts. */
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: no-preference) {

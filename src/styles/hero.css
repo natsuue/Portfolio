@@ -28,8 +28,8 @@
   mask-image: radial-gradient(130% 95% at 78% 30%, #000 25%, rgba(0, 0, 0, 0.35) 60%, transparent 90%);
 }
 
-/* Flashlight: with a mouse over the Hero, the pattern dims to --floor and a soft light around the
-   pointer (--lx / --ly, set in Hero.jsx) reveals it. */
+/* Flashlight: with a mouse over the Hero, the pattern dims to --floor and a light around the pointer
+   (--lx / --ly, set in Hero.jsx) reveals it, plus a hidden layer of white traces (.hero__reveal). */
 @property --floor {
   syntax: '<number>';
   inherits: false;
@@ -45,12 +45,13 @@
   .hero__field {
     --floor: 1;
     --spot: 0;
-    --spot-r: clamp(170px, 14vw, 260px);
+    --spot-r: clamp(220px, 18vw, 340px);
+    --spot-mask: radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), #000 0, #000 32%, rgba(0, 0, 0, 0.5) 62%, transparent);
     -webkit-mask-image:
-      radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / calc(var(--spot) * 0.55)) 55%, transparent),
+      radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / var(--spot)) 32%, rgb(0 0 0 / calc(var(--spot) * 0.5)) 62%, transparent),
       linear-gradient(rgb(0 0 0 / var(--floor)), rgb(0 0 0 / var(--floor)));
     mask-image:
-      radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / calc(var(--spot) * 0.55)) 55%, transparent),
+      radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / var(--spot)) 32%, rgb(0 0 0 / calc(var(--spot) * 0.5)) 62%, transparent),
       linear-gradient(rgb(0 0 0 / var(--floor)), rgb(0 0 0 / var(--floor)));
     -webkit-mask-composite: source-over;
     mask-composite: add;
@@ -61,8 +62,30 @@
   }
 
   .hero__field.is-lit {
-    --floor: 0.2;
+    --floor: 0.15;
     --spot: 1;
+  }
+
+  /* White traces that only exist under the light. */
+  .hero__reveal {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    -webkit-mask-image: var(--spot-mask);
+    mask-image: var(--spot-mask);
+    transition: opacity 0.5s var(--ease-out);
+  }
+
+  .hero__field.is-lit .hero__reveal {
+    opacity: 1;
+  }
+}
+
+@media not ((hover: hover) and (pointer: fine)) {
+  .hero__reveal {
+    display: none;
   }
 }
 

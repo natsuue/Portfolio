@@ -11,8 +11,9 @@ const DIRS = [
   [-1, 0], [-1, -1], [0, -1], [1, -1],
 ];
 
-function makeTraces(w, h) {
-  const count = Math.max(24, Math.min(110, Math.round((w * h) / 15000)));
+// One trace per `area` px² of screen, capped at `max`. HeroReveal uses a denser set.
+export function makeTraces(w, h, area = 9000, max = 170) {
+  const count = Math.max(24, Math.min(max, Math.round((w * h) / area)));
   const traces = [];
   for (let i = 0; i < count; i++) {
     let x = Math.round((Math.random() * w) / GRID) * GRID;
