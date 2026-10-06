@@ -15,8 +15,8 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  height: min(82vh, 48rem);
-  min-height: 36rem;
+  /* room for every closed strip plus one open one */
+  height: max(36rem, calc(var(--n, 2) * 7.5rem + 20rem));
 }
 
 .project-panel {

@@ -51,6 +51,7 @@ export default function ProjectCard({ project: p, open, onActivate, onOpen }) {
               ))}
               {extra > 0 && <li className="tag tag--more">+{extra}</li>}
             </ul>
+            {!p.placeholder && (
             <button
               type="button"
               className="project-panel__cta"
@@ -59,6 +60,7 @@ export default function ProjectCard({ project: p, open, onActivate, onOpen }) {
               View project<span className="sr-only">: {p.title}</span>
               <ArrowUpRight />
             </button>
+            )}
           </div>
         </div>
       </div>

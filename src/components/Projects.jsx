@@ -1,7 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import ProjectCard from './ProjectCard.jsx';
 import CaseStudy from './CaseStudy.jsx';
-import { projects } from '../data/projects.js';
+import { projects as realProjects } from '../data/projects.js';
+
+// Preview only: add ?placeholders to the URL to see the section with more projects. These never
+// show on the normal site.
+const PLACEHOLDERS = ['Project Three', 'Project Four', 'Project Five'].map((title, i) => ({
+  slug: `placeholder-${i + 3}`,
+  title,
+  subtitle: 'Placeholder project',
+  period: '2026',
+  status: 'Placeholder',
+  description: 'A stand-in to preview how the section looks with more projects. Replace it with a real project in src/data/projects.js.',
+  technologies: ['Tech one', 'Tech two', 'Tech three'],
+  image: realProjects[i % realProjects.length].image,
+  imageAlt: '',
+  placeholder: true,
+}));
+const projects =
+  typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('placeholders')
+    ? [...realProjects, ...PLACEHOLDERS]
+    : realProjects;
 
 const HASH = /^#work\/([\w-]+)$/;
 
@@ -53,6 +72,7 @@ export default function Projects() {
 
         <div
           className="project-panels"
+          style={{ '--n': projects.length }}
           onPointerLeave={(e) => e.pointerType === 'mouse' && setActive(null)}
           onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setActive(null)}
         >
