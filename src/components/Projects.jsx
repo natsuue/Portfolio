@@ -7,6 +7,7 @@ const HASH = /^#work\/([\w-]+)$/;
 
 export default function Projects() {
   const [openSlug, setOpenSlug] = useState(null);
+  const [active, setActive] = useState(0); // the widened panel
   const triggerRef = useRef(null);
 
   // Case studies are linkable: /#work/purisense opens that project directly.
@@ -50,18 +51,17 @@ export default function Projects() {
         </header>
 
 
-        <ul className="project-list">
+        <div className="project-panels">
           {projects.map((p, i) => (
-            <li key={p.slug} style={{ '--i': i }}>
-              <ProjectCard
-                project={p}
-                number={i + 1}
-                flip={i % 2 === 1}
-                onOpen={open}
-              />
-            </li>
+            <ProjectCard
+              key={p.slug}
+              project={p}
+              open={active === i}
+              onActivate={() => setActive(i)}
+              onOpen={open}
+            />
           ))}
-        </ul>
+        </div>
       </div>
 
       {current && (
