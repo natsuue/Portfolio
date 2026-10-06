@@ -1,12 +1,6 @@
-/* The Projects section opens with just its small label, so less space under it. */
-.projects__head {
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-
-.projects__head h2 {
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
+/* No padding: the strips sit flush against the sections above and below. */
+.section.projects {
+  padding-block: 0;
 }
 
 /* Expanding strips: full-width strips stacked top to bottom; the open one grows taller and shows

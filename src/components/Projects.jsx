@@ -59,16 +59,10 @@ export default function Projects() {
 
   return (
     <section id="projects" className="section projects" aria-labelledby="projects-title">
-      <div className="container">
-        {/* Just the small label, no big title: the projects themselves open the section. */}
-        <header className="section-head projects__head">
-          <h2 id="projects-title" className="section-head__label mono">
-            <span className="section-head__index">01</span>
-            <span className="section-head__rule" aria-hidden="true" />
-            Projects
-          </h2>
-        </header>
-      </div>
+      {/* No visible heading: the strips open the section. This one is for screen readers. */}
+      <h2 id="projects-title" className="sr-only">
+        Projects
+      </h2>
 
       {/* the strips run edge to edge, outside the centred container */}
       <div
