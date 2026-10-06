@@ -68,9 +68,10 @@ export default function Projects() {
             Projects
           </h2>
         </header>
+      </div>
 
-
-        <div
+      {/* the strips run edge to edge, outside the centred container */}
+      <div
           className="project-panels"
           style={{ '--n': projects.length }}
           onPointerLeave={(e) => e.pointerType === 'mouse' && setActive(null)}
@@ -85,7 +86,6 @@ export default function Projects() {
               onOpen={open}
             />
           ))}
-        </div>
       </div>
 
       {current && (

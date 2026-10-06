@@ -33,6 +33,16 @@
     border-color 0.4s;
 }
 
+/* edge to edge: no side borders or corners; the text keeps the page's left edge */
+.project-panel {
+  border-inline: 0;
+  border-radius: 0;
+}
+
+.project-panels .project-panel__body {
+  padding-left: max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter)));
+}
+
 /* strips touch: share one border line between them */
 .project-panel + .project-panel {
   margin-top: -1px;
@@ -58,7 +68,7 @@
 
   .project-panel__body {
     right: auto;
-    width: min(44rem, 62%);
+    width: min(calc(44rem + max(0px, (100vw - var(--maxw)) / 2)), 62%);
   }
 
   /* a closed strip: date and title centred in the strip */
