@@ -42,8 +42,8 @@ export const contact = {
 };
 
 export const navLinks = [
-  { id: 'about', label: 'About' },
   { id: 'projects', label: 'Projects' },
+  { id: 'about', label: 'About' },
   { id: 'journey', label: 'Journey' },
   { id: 'contact', label: 'Contact' },
 ];

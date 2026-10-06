@@ -68,16 +68,16 @@ to skip the intro when checking other sections.
   its edge; clicking or tapping it replays the escape. Without hover, the edge light runs once every
   6 s as a hint. None of this runs under reduced motion.
 - **Header:** keeps both the "Contact" link and the "Let's talk" button (his choice).
-- **Section order:** Hero → About (About and Skills merged) → Projects → Inside PuriSense (3D,
-  scroll-pinned) → Journey → Certifications → Contact. The nav has one "About" link for both.
+- **Section order:** Hero → Projects → Inside PuriSense (3D, scroll-pinned) → About (About and
+  Skills merged) → Journey → Certifications → Contact. Nav: Projects, About, Journey, Contact.
 - **About:** one block, the card on the left joined to a skills box on the right. The card holds his
   four graduation photos (`public/images/about/`, one burst stepped through by scroll, natural
   colour), a small "Engineering *across* the stack." heading, and only the first About sentence set
   large in the serif. The box has four rows (Hardware, Software, Web, Mobile + Tools) with fixed
   labels and the skill names sliding. Pins on wide screens; on phones the box sits under the card.
-- **Hero → About handover ("slide over"):** with motion allowed, the Hero's background pattern is
-  fixed behind the Hero and About and fades out as About ends; on wide screens the chip also stays
-  put and fades as the About block slides up over it. Reduced motion: everything scrolls normally.
+- **Hero → Projects handover:** with motion allowed, the Hero's background pattern stays fixed while
+  the Hero copy scrolls away and fades out as Projects comes up; on wide screens the chip also stays
+  put and fades as Projects arrives. Reduced motion: everything scrolls normally.
 - PuriSense is a **team thesis**. Always credit it as such, with his role (firmware, Flutter app,
   Firebase backend, hardware).
 - Respect `prefers-reduced-motion` in anything animated, and keep mobile layouts intentional.

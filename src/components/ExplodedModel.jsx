@@ -95,7 +95,7 @@ export default function ExplodedModel() {
       aria-labelledby="inside-title"
     >
       <div className="container">
-        <SectionHeader index="03" label="Prototype" id="inside-title" title={model.title} kicker={model.kicker} />
+        <SectionHeader index="02" label="Prototype" id="inside-title" title={model.title} kicker={model.kicker} />
       </div>
 
       <div className="inside__track" ref={trackRef}>

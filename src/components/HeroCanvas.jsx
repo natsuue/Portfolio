@@ -126,6 +126,7 @@ export default function HeroCanvas() {
 
     const build = () => {
       const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return; // hidden (faded out): nothing to draw
       w = rect.width;
       h = rect.height;
       dpr = Math.min(window.devicePixelRatio || 1, 2);

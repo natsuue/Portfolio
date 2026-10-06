@@ -321,10 +321,10 @@ export default function HeroChip({ slotRef, hitRef, playing }) {
         c.released = true;
         release();
       }
-      // handover: as the About block slides up over the chip, the chip fades out under it
-      const about = document.getElementById('about');
-      const k = about ? clamp01(1 - about.getBoundingClientRect().top / window.innerHeight) : 0;
-      const fade = 1 - smooth((k - 0.8) / 0.18);
+      // handover: as Projects comes up, the chip fades out
+      const next = document.getElementById('projects');
+      const k = next ? clamp01(1 - next.getBoundingClientRect().top / window.innerHeight) : 0;
+      const fade = 1 - smooth((k - 0.3) / 0.45);
       canvas.style.opacity = fade < 1 ? fade.toFixed(3) : '';
       if (hit) {
         hit.style.transform = window.scrollY ? `translateY(${window.scrollY}px)` : ''; // the button stays on the drawn chip

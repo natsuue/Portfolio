@@ -5,8 +5,7 @@ import { emphasize } from "../utils/emphasize.jsx";
 import useReducedMotion from "../hooks/useReducedMotion.js";
 
 // About + Skills. One block: the card (the photo burst and one sentence) on the left, joined to a box
-// of skill rows on the right, each row with a fixed group label and the names sliding past. As the
-// block scrolls up it covers the Hero's chip, which fades out under it (see HeroChip). On wide
+// of skill rows on the right, each row with a fixed group label and the names sliding past. On wide
 // screens the section pins for a stretch of scrolling: the photo steps through the burst and the
 // rows drift (faster while you scroll, paused under the mouse). On phones nothing pins.
 

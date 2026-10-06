@@ -38,12 +38,12 @@ export default function Hero() {
           contentRef.current.style.transform = `translate3d(0, ${y * 0.16}px, 0)`;
           contentRef.current.style.opacity = String(Math.max(0, 1 - y / (vh * 1.05)));
         }
-        // The pattern is fixed behind the Hero and About; it fades out as About ends, and stops
+        // The pattern is fixed behind the Hero; it fades out as Projects comes up, and stops
         // drawing once it's gone. (Left alone while the intro holds it hidden.)
         const field = fieldRef.current;
-        const about = document.getElementById('about');
-        if (field && about && !isBooting()) {
-          const fade = Math.min(1, Math.max(0, (about.getBoundingClientRect().bottom - vh * 0.45) / (vh * 0.55)));
+        const next = document.getElementById('projects');
+        if (field && next && !isBooting()) {
+          const fade = Math.min(1, Math.max(0, (next.getBoundingClientRect().top - vh * 0.2) / (vh * 0.5)));
           field.style.transition = fade < 1 ? 'none' : '';
           field.style.opacity = fade < 1 ? fade.toFixed(3) : '';
           field.style.display = fade <= 0 ? 'none' : '';

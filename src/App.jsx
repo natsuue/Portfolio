@@ -22,9 +22,9 @@ export default function App() {
       <Nav />
       <main id="main" tabIndex={-1}>
         <Hero />
-        <About />
         <Projects />
         <ExplodedModel />
+        <About />
         <Timeline />
         <Achievements />
         <Contact />

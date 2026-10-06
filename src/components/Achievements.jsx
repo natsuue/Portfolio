@@ -9,7 +9,7 @@ export default function Achievements() {
   return (
     <section id="certifications" className="section achievements" aria-labelledby="certifications-title">
       <div className="container">
-        <SectionHeader index="05" label="Certifications" id="certifications-title" title="*Credentials*." />
+        <SectionHeader index="04" label="Certifications" id="certifications-title" title="*Credentials*." />
 
         <ul className="creds">
           {achievements.map((a, i) => (
