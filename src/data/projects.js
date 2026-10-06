@@ -1,23 +1,15 @@
 // Projects shown in the Projects section and their case studies.
-// Filters are generated from each project's `category` array; labels come from `categories`.
+// They're listed in this order, without categories.
 // Links with `href: null` are hidden. Gallery items without `src` render as labelled placeholders.
 //
 // NOTE: PuriSense is written from the thesis code and docs. CognitiveAI was drafted from the
 // resume only — review it, especially "Challenges" and "Solution".
-
-export const categories = {
-  hardware: 'Hardware',
-  mobile: 'Mobile',
-  web: 'Web',
-  AI: 'AI',
-};
 
 export const projects = [
   {
     slug: 'cognitiveai',
     title: 'CognitiveAI',
     subtitle: 'Web-Based Cognitive Performance Prediction System',
-    category: ['web'],
     period: 'Feb 2026 – May 2026',
     status: 'Completed',
     description:
@@ -143,7 +135,6 @@ export const projects = [
     slug: 'purisense',
     title: 'PuriSense',
     subtitle: 'Smart Air Purifier IoT System',
-    category: ['hardware', 'mobile', 'web'],
     period: 'Jan 2026 – May 2026',
     status: 'Team thesis · Completed',
     role: 'ESP32 firmware, Flutter app, Firebase backend, and hardware build',

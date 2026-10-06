@@ -1,5 +1,4 @@
 import { ArrowUpRight } from './Icons.jsx';
-import { categories } from '../data/projects.js';
 import { pad } from '../utils/emphasize.jsx';
 
 const MAX_TAGS = 6;
@@ -24,8 +23,6 @@ export default function ProjectCard({ project: p, number, flip, onOpen }) {
       <div className="project-card__body">
         <p className="project-card__meta mono">
           <span>{p.period}</span>
-          <span aria-hidden="true">/</span>
-          <span>{p.category.map((c) => categories[c] ?? c).join(' · ')}</span>
         </p>
         <h3 id={`project-${p.slug}`} className="project-card__title">
           {p.title}

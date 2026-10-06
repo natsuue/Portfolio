@@ -1,49 +1,12 @@
 /* The Projects section opens with just its small label, so less space under it. */
 .projects__head {
-  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
 .projects__head h2 {
   font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.06em;
-}
-
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-
-.filter {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  min-height: 44px;
-  padding: 0.55rem 1.1rem;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 0.92rem;
-  white-space: nowrap;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-}
-
-.filter:hover {
-  color: var(--text);
-  border-color: var(--text);
-}
-
-.filter[aria-pressed='true'] {
-  background: var(--text);
-  border-color: var(--text);
-  color: var(--bg);
-}
-
-.filter__count {
-  font-size: 0.65rem;
-  opacity: 0.7;
 }
 
 .project-list {
@@ -227,19 +190,6 @@
 }
 
 @media (max-width: 599px) {
-  .filters {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    margin-inline: calc(var(--gutter) * -1);
-    padding-inline: var(--gutter);
-    padding-bottom: 0.25rem;
-    scrollbar-width: none;
-  }
-
-  .filters::-webkit-scrollbar {
-    display: none;
-  }
-
   .project-card__cta {
     width: 100%;
     justify-content: center;

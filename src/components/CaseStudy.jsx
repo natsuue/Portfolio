@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import FlowDiagram from './FlowDiagram.jsx';
 import { ArrowRight, ArrowUpRight, Close } from './Icons.jsx';
-import { categories } from '../data/projects.js';
 import { pad } from '../utils/emphasize.jsx';
 import useReducedMotion from '../hooks/useReducedMotion.js';
 
@@ -78,7 +77,7 @@ export default function CaseStudy({ project: p, number, total, next, onNavigate,
 
         <header className="case__head container" key={`head-${p.slug}`}>
           <p className="case__cats mono">
-            {p.category.map((c) => categories[c] ?? c).join(' · ')} — {p.period}
+            {p.period}
           </p>
           <h2 id="case-title" className="case__title">
             {p.title}
@@ -109,10 +108,6 @@ export default function CaseStudy({ project: p, number, total, next, onNavigate,
                   <dd>{p.status}</dd>
                 </div>
               )}
-              <div>
-                <dt className="mono">Disciplines</dt>
-                <dd>{p.category.map((c) => categories[c] ?? c).join(', ')}</dd>
-              </div>
             </dl>
             <nav className="case__toc" aria-label="Case study sections">
               <p className="mono">Contents</p>
