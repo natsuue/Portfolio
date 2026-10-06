@@ -23,7 +23,7 @@
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border-radius: 2px;
   background: var(--bg-2);
   cursor: pointer;
   transition:
