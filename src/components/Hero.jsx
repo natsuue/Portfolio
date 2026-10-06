@@ -84,6 +84,7 @@ export default function Hero() {
       s.setProperty('--spot-falloff', `${f.falloff}%`);
       s.setProperty('--spot-edge', String(f.edge));
       s.setProperty('--floor-lit', String(f.dim));
+      s.setProperty('--pulse-floor-lit', String(f.pulses ?? f.dim));
     };
     apply();
     window.addEventListener(HERO_SETTINGS_EVENT, apply);

@@ -3,7 +3,8 @@ import useReducedMotion from '../hooks/useReducedMotion.js';
 import { HERO_SETTINGS_EVENT, heroSettings } from '../data/hero.js';
 
 // Procedural PCB-style traces with signal pulses travelling along them.
-// Static traces are drawn once to an offscreen canvas; each frame only adds the pulses.
+// The static traces are drawn once; the pulses go on their own canvas (redrawn each frame), so the
+// flashlight can dim the lines and the pulses by different amounts (hero.css, src/data/hero.js).
 
 const GRID = 28;
 const PULSE = 64;
@@ -66,11 +67,13 @@ function strokeBetween(ctx, t, a, b) {
 
 export default function HeroCanvas() {
   const canvasRef = useRef(null);
+  const pulsesRef = useRef(null);
   const reduced = useReducedMotion();
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = pulsesRef.current.getContext('2d');
+    const pulses = pulsesRef.current;
     const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#47afff';
     const base = document.createElement('canvas');
     let w = 0, h = 0, dpr = 1, traces = [], raf = 0, last = 0, visible = true;
@@ -101,8 +104,7 @@ export default function HeroCanvas() {
 
     const paint = (dt) => {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(base, 0, 0);
+      ctx.clearRect(0, 0, pulses.width, pulses.height);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.lineCap = 'round';
       ctx.strokeStyle = accent;
@@ -127,10 +129,13 @@ export default function HeroCanvas() {
       w = rect.width;
       h = rect.height;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = base.width = Math.round(w * dpr);
-      canvas.height = base.height = Math.round(h * dpr);
+      canvas.width = base.width = pulses.width = Math.round(w * dpr);
+      canvas.height = base.height = pulses.height = Math.round(h * dpr);
       traces = makeTraces(w, h, heroSettings.lines.area, heroSettings.lines.max);
       drawBase();
+      const c = canvas.getContext('2d');
+      c.clearRect(0, 0, canvas.width, canvas.height);
+      c.drawImage(base, 0, 0);
       if (reduced) {
         // A still frame with a few traces lit.
         traces.forEach((t, i) => (t.head = i % 5 === 0 ? t.len * 0.6 : -1));
@@ -184,5 +189,14 @@ export default function HeroCanvas() {
     };
   }, [reduced]);
 
-  return <canvas ref={canvasRef} className="hero__canvas" />;
+  return (
+    <>
+      <div className="hero__layer hero__layer--lines">
+        <canvas ref={canvasRef} className="hero__canvas" />
+      </div>
+      <div className="hero__layer hero__layer--pulses">
+        <canvas ref={pulsesRef} className="hero__canvas" />
+      </div>
+    </>
+  );
 }

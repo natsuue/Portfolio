@@ -21,7 +21,14 @@
   will-change: transform;
 }
 
+/* lines and pulses: two stacked layers, so the flashlight can dim them separately */
+.hero__layer {
+  position: absolute;
+  inset: 0;
+}
+
 .hero__canvas {
+  display: block;
   width: 100%;
   height: 100%;
   -webkit-mask-image: radial-gradient(130% 95% at 78% 30%, #000 25%, rgba(0, 0, 0, 0.35) 60%, transparent 90%);
@@ -32,18 +39,24 @@
    (--lx / --ly, set in Hero.jsx) reveals it, plus a hidden layer of white traces (.hero__reveal). */
 @property --floor {
   syntax: '<number>';
-  inherits: false;
+  inherits: true;
   initial-value: 1;
 }
 @property --spot {
   syntax: '<number>';
-  inherits: false;
+  inherits: true;
   initial-value: 0;
+}
+@property --pfloor {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .hero__field {
     --floor: 1;
+    --pfloor: 1;
     --spot: 0;
     /* the light's shape: set from src/data/hero.js in Hero.jsx */
     --spot-r: 280px;
@@ -51,22 +64,32 @@
     --spot-falloff: 62%;
     --spot-edge: 0.5;
     --spot-mask: radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), #000 0, #000 var(--spot-core), rgb(0 0 0 / var(--spot-edge)) var(--spot-falloff), transparent);
-    -webkit-mask-image:
-      radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / var(--spot)) var(--spot-core), rgb(0 0 0 / calc(var(--spot) * var(--spot-edge))) var(--spot-falloff), transparent),
-      linear-gradient(rgb(0 0 0 / var(--floor)), rgb(0 0 0 / var(--floor)));
-    mask-image:
-      radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / var(--spot)) var(--spot-core), rgb(0 0 0 / calc(var(--spot) * var(--spot-edge))) var(--spot-falloff), transparent),
-      linear-gradient(rgb(0 0 0 / var(--floor)), rgb(0 0 0 / var(--floor)));
-    -webkit-mask-composite: source-over;
-    mask-composite: add;
+    --spot-light: radial-gradient(circle var(--spot-r) at var(--lx, -999px) var(--ly, -999px), rgb(0 0 0 / var(--spot)), rgb(0 0 0 / var(--spot)) var(--spot-core), rgb(0 0 0 / calc(var(--spot) * var(--spot-edge))) var(--spot-falloff), transparent);
     transition:
       opacity 0.8s var(--ease-out) 0.2s,
       --floor 0.7s var(--ease-out),
+      --pfloor 0.7s var(--ease-out),
       --spot 0.7s var(--ease-out);
+  }
+
+  /* lines and pulses each dim to their own floor outside the light */
+  .hero__layer--lines {
+    -webkit-mask-image: var(--spot-light), linear-gradient(rgb(0 0 0 / var(--floor)), rgb(0 0 0 / var(--floor)));
+    mask-image: var(--spot-light), linear-gradient(rgb(0 0 0 / var(--floor)), rgb(0 0 0 / var(--floor)));
+    -webkit-mask-composite: source-over;
+    mask-composite: add;
+  }
+
+  .hero__layer--pulses {
+    -webkit-mask-composite: source-over;
+    mask-composite: add;
+    -webkit-mask-image: var(--spot-light), linear-gradient(rgb(0 0 0 / var(--pfloor)), rgb(0 0 0 / var(--pfloor)));
+    mask-image: var(--spot-light), linear-gradient(rgb(0 0 0 / var(--pfloor)), rgb(0 0 0 / var(--pfloor)));
   }
 
   .hero__field.is-lit {
     --floor: var(--floor-lit, 0.15);
+    --pfloor: var(--pulse-floor-lit, 0.6);
     --spot: 1;
   }
 

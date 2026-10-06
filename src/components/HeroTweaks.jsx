@@ -32,7 +32,8 @@ const CONTROLS = [
       { group: 'flashlight', key: 'core', label: 'Fully lit centre (%)', min: 0, max: 90, step: 1 },
       { group: 'flashlight', key: 'falloff', label: 'Fade point (%)', min: 10, max: 100, step: 1 },
       { group: 'flashlight', key: 'edge', label: 'Strength at fade point', min: 0, max: 1, step: 0.05 },
-      { group: 'flashlight', key: 'dim', label: 'Pattern outside the light', min: 0, max: 1, step: 0.05 },
+      { group: 'flashlight', key: 'dim', label: 'Lines outside the light', min: 0, max: 1, step: 0.05 },
+      { group: 'flashlight', key: 'pulses', label: 'Blue pulses outside the light', min: 0, max: 1, step: 0.05 },
     ],
   },
 ];
@@ -53,7 +54,7 @@ function snippet() {
   return [
     `  lines: { area: ${l.area}, max: ${l.max} },`,
     `  reveal: { area: ${r.area}, max: ${r.max}, brightness: ${r.brightness} },`,
-    `  flashlight: { radius: ${f.radius}, core: ${f.core}, falloff: ${f.falloff}, edge: ${f.edge}, dim: ${f.dim} },`,
+    `  flashlight: { radius: ${f.radius}, core: ${f.core}, falloff: ${f.falloff}, edge: ${f.edge}, dim: ${f.dim}, pulses: ${f.pulses} },`,
   ].join('\n');
 }
 

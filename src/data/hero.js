@@ -13,7 +13,8 @@ export const heroSettings = {
     core: 32, // % of the radius that is fully lit
     falloff: 62, // % of the radius where the light has dropped to `edge`…
     edge: 0.5, // …strength there (0–1); it fades to nothing at the radius
-    dim: 0.15, // how visible the pattern stays outside the light (0–1)
+    dim: 0.15, // how visible the lines stay outside the light (0–1)
+    pulses: 0.6, // how visible the moving blue pulses stay outside the light (0–1)
   },
 };
 
