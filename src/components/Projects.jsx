@@ -7,7 +7,7 @@ const HASH = /^#work\/([\w-]+)$/;
 
 export default function Projects() {
   const [openSlug, setOpenSlug] = useState(null);
-  const [active, setActive] = useState(0); // the widened panel
+  const [active, setActive] = useState(null); // the open strip; none while the mouse is elsewhere
   const triggerRef = useRef(null);
 
   // Case studies are linkable: /#work/purisense opens that project directly.
@@ -51,7 +51,11 @@ export default function Projects() {
         </header>
 
 
-        <div className="project-panels">
+        <div
+          className="project-panels"
+          onPointerLeave={(e) => e.pointerType === 'mouse' && setActive(null)}
+          onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setActive(null)}
+        >
           {projects.map((p, i) => (
             <ProjectCard
               key={p.slug}
