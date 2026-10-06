@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import SectionHeader from './SectionHeader.jsx';
 import ProjectCard from './ProjectCard.jsx';
 import CaseStudy from './CaseStudy.jsx';
 import { categories, projects } from '../data/projects.js';
@@ -63,13 +62,14 @@ export default function Projects() {
   return (
     <section id="projects" className="section projects" aria-labelledby="projects-title">
       <div className="container">
-        <SectionHeader
-          index="01"
-          label="Projects"
-          id="projects-title"
-          title="Selected *work*."
-          kicker="End-to-end systems where firmware, cloud, and interface all had to work together."
-        />
+        {/* Just the small label, no big title: the projects themselves open the section. */}
+        <header className="section-head projects__head">
+          <h2 id="projects-title" className="section-head__label mono">
+            <span className="section-head__index">01</span>
+            <span className="section-head__rule" aria-hidden="true" />
+            Projects
+          </h2>
+        </header>
 
         <div className="filters" role="group" aria-label="Filter projects by category">
           {filters.map((f) => (

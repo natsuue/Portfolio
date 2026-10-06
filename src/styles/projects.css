@@ -1,3 +1,14 @@
+/* The Projects section opens with just its small label, so less space under it. */
+.projects__head {
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.projects__head h2 {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
